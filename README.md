@@ -76,7 +76,7 @@ Ikuti langkah-langkah ini secara berurutan di terminal Anda:
 
 Clone project ini ke folder lokal Anda:
 ```bash
-git clone <URL_REPOSITORI>
+git clone https://github.com/Doctor3131/ppl-project-akhir.git
 cd ppl-project-akhir
 ```
 
