@@ -147,7 +147,7 @@ DB_USERNAME=postgres
 DB_PASSWORD=masukkan_password_dari_langkah_3_disini
 ```
 
-Terakhir, generate key aplikasi Laravel:
+Terakhir, generate key aplikasi Laravel dan tambahkan hasilnya ke .env yang APP_KEY:
 ```bash
 php artisan key:generate
 ```
