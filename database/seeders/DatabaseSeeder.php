@@ -14,33 +14,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Seed admin user
+        $this->call(AdminSeeder::class);
 
-        // Test User Default - Disable 2FA
-        User::factory()->withoutTwoFactor()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
-
-        // User Taqi - Disable 2FA
-        User::factory()->withoutTwoFactor()->create([
-            'name' => 'Taqi',
-            'email' => 'taqi@gmail.com',
-            'password' => Hash::make('12345678'),
-        ]);
-
-        // User Hidah - Disable 2FA
-        User::factory()->withoutTwoFactor()->create([
-            'name' => 'Hidah',
-            'email' => 'hidah@gmail.com',
-            'password' => Hash::make('12345678'),
-        ]);
-
-        // User Raya - Disable 2FA
-        User::factory()->withoutTwoFactor()->create([
-            'name' => 'Raya',
-            'email' => 'raya@gmail.com',
-            'password' => Hash::make('12345678'),
-        ]);
+        // Seed sample categories
+        $this->call(CategorySeeder::class);
     }
 }

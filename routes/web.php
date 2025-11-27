@@ -1,43 +1,69 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Laravel\Fortify\Features;
-use Livewire\Volt\Volt;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Seller\DashboardController as SellerDashboardController;
+use App\Http\Controllers\Seller\ProductController as SellerProductController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\SellerController;
 
-Route::get("/", function () {
-    return view("welcome");
-})->name("home");
+// Public routes
+Route::get("/", [HomeController::class, "index"])->name("home");
+Route::get("/products/{id}", [HomeController::class, "show"])->name(
+    "products.show",
+);
 
-Route::view("dashboard", "dashboard")
-    ->middleware(["auth", "verified"])
-    ->name("dashboard");
-
-Route::middleware(["auth"])->group(function () {
-    Volt::route("seller/verify", "seller.verify-data")->name("seller.verify");
+// Authentication routes
+Route::middleware("guest")->group(function () {
+    Route::get("/login", [LoginController::class, "showLoginForm"])->name(
+        "login",
+    );
+    Route::post("/login", [LoginController::class, "login"]);
+    Route::get("/register", [
+        RegisterController::class,
+        "showRegistrationForm",
+    ])->name("register");
+    Route::post("/register", [RegisterController::class, "register"]);
 });
 
-Route::middleware(["auth"])->group(function () {
-    Route::redirect("settings", "settings/profile");
+Route::post("/logout", [LoginController::class, "logout"])
+    ->name("logout")
+    ->middleware("auth");
 
-    Volt::route("settings/profile", "settings.profile")->name("profile.edit");
-    Volt::route("settings/password", "settings.password")->name(
-        "user-password.edit",
-    );
-    Volt::route("settings/appearance", "settings.appearance")->name(
-        "appearance.edit",
-    );
+// Seller routes
+Route::prefix("seller")
+    ->name("seller.")
+    ->middleware(["auth", \App\Http\Middleware\SellerMiddleware::class])
+    ->group(function () {
+        Route::get("/dashboard", [
+            SellerDashboardController::class,
+            "index",
+        ])->name("dashboard");
+        Route::resource("products", SellerProductController::class);
+    });
 
-    Volt::route("settings/two-factor", "settings.two-factor")
-        ->middleware(
-            when(
-                Features::canManageTwoFactorAuthentication() &&
-                    Features::optionEnabled(
-                        Features::twoFactorAuthentication(),
-                        "confirmPassword",
-                    ),
-                ["password.confirm"],
-                [],
-            ),
-        )
-        ->name("two-factor.show");
-});
+// Admin routes
+Route::prefix("admin")
+    ->name("admin.")
+    ->middleware(["auth", \App\Http\Middleware\AdminMiddleware::class])
+    ->group(function () {
+        Route::get("/dashboard", [
+            AdminDashboardController::class,
+            "index",
+        ])->name("dashboard");
+        Route::resource("categories", CategoryController::class);
+        Route::get("/sellers", [SellerController::class, "index"])->name(
+            "sellers.index",
+        );
+        Route::post("/sellers/{id}/approve", [
+            SellerController::class,
+            "approve",
+        ])->name("sellers.approve");
+        Route::post("/sellers/{id}/reject", [
+            SellerController::class,
+            "reject",
+        ])->name("sellers.reject");
+    });

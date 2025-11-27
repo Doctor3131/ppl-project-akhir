@@ -20,7 +20,7 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $fillable = ["name", "email", "password"];
+    protected $fillable = ["name", "email", "password", "role", "status"];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -48,6 +48,38 @@ class User extends Authenticatable
     }
 
     /**
+     * Check if user is admin
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === "admin";
+    }
+
+    /**
+     * Check if user is seller
+     */
+    public function isSeller(): bool
+    {
+        return $this->role === "seller";
+    }
+
+    /**
+     * Check if user is approved
+     */
+    public function isApproved(): bool
+    {
+        return $this->status === "approved";
+    }
+
+    /**
+     * Get the products for the seller
+     */
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    /**
      * Get the user's initials
      */
     public function initials(): string
@@ -57,15 +89,5 @@ class User extends Authenticatable
             ->take(2)
             ->map(fn($word) => Str::substr($word, 0, 1))
             ->implode("");
-    }
-
-    public function sellerVerification(): HasOne
-    {
-        return $this->hasOne(SellerVerification::class);
-    }
-
-    public function isVerifiedSeller(): bool
-    {
-        return $this->sellerVerification?->isApproved() ?? false;
     }
 }
