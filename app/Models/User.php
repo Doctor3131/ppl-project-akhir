@@ -72,6 +72,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the seller details
+     */
+    public function seller(): HasOne
+    {
+        return $this->hasOne(SellerVerification::class);
+    }
+
+    /**
      * Get the products for the seller
      */
     public function products()

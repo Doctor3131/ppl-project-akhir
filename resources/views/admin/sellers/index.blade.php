@@ -46,6 +46,9 @@
                                 Seller Name
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Shop Name
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Email
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -77,6 +80,13 @@
                                         </div>
                                     </div>
                                 </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    @if($seller->seller)
+                                        {{ $seller->seller->shop_name }}
+                                    @else
+                                        <span class="text-gray-400 italic">-</span>
+                                    @endif
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     {{ $seller->email }}
                                 </td>
@@ -99,8 +109,12 @@
                                     {{ $seller->created_at->format('M d, Y') }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    @if($seller->status === 'pending')
-                                        <div class="flex items-center space-x-3">
+                                    <div class="flex items-center space-x-3">
+                                        <a href="{{ route('admin.sellers.show', $seller->id) }}"
+                                            class="text-indigo-600 hover:text-indigo-900">
+                                            View Detail
+                                        </a>
+                                        @if($seller->status === 'pending')
                                             <form action="{{ route('admin.sellers.approve', $seller->id) }}" method="POST" class="inline">
                                                 @csrf
                                                 <button type="submit"
@@ -117,19 +131,17 @@
                                                     Reject
                                                 </button>
                                             </form>
-                                        </div>
-                                    @elseif($seller->status === 'approved')
-                                        <span class="text-gray-400">No actions available</span>
-                                    @else
-                                        <form action="{{ route('admin.sellers.approve', $seller->id) }}" method="POST" class="inline">
-                                            @csrf
-                                            <button type="submit"
-                                                class="text-green-600 hover:text-green-900"
-                                                onclick="return confirm('Are you sure you want to approve this seller?');">
-                                                Approve
-                                            </button>
-                                        </form>
-                                    @endif
+                                        @elseif($seller->status === 'rejected')
+                                            <form action="{{ route('admin.sellers.approve', $seller->id) }}" method="POST" class="inline">
+                                                @csrf
+                                                <button type="submit"
+                                                    class="text-green-600 hover:text-green-900"
+                                                    onclick="return confirm('Are you sure you want to approve this seller?');">
+                                                    Approve
+                                                </button>
+                                            </form>
+                                        @endif
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach

@@ -58,6 +58,9 @@ Route::prefix("admin")
         Route::get("/sellers", [SellerController::class, "index"])->name(
             "sellers.index",
         );
+        Route::get("/sellers/{id}", [SellerController::class, "show"])->name(
+            "sellers.show",
+        );
         Route::post("/sellers/{id}/approve", [
             SellerController::class,
             "approve",

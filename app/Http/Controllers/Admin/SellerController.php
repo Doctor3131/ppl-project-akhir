@@ -13,7 +13,7 @@ class SellerController extends Controller
      */
     public function index(Request $request)
     {
-        $query = User::where("role", "seller");
+        $query = User::where("role", "seller")->with("seller");
 
         // Filter by status
         if ($request->has("status") && $request->status != "") {
@@ -26,6 +26,18 @@ class SellerController extends Controller
     }
 
     /**
+     * Display seller details
+     */
+    public function show($id)
+    {
+        $seller = User::where("role", "seller")
+            ->with("seller")
+            ->findOrFail($id);
+
+        return view("admin.sellers.show", compact("seller"));
+    }
+
+    /**
      * Approve seller registration
      */
     public function approve($id)
@@ -35,6 +47,14 @@ class SellerController extends Controller
         $seller->update([
             "status" => "approved",
         ]);
+
+        // Update seller verification status if exists
+        if ($seller->seller) {
+            $seller->seller->update([
+                "status" => "approved",
+                "verified_at" => now(),
+            ]);
+        }
 
         return redirect()
             ->route("admin.sellers.index")
@@ -51,6 +71,13 @@ class SellerController extends Controller
         $seller->update([
             "status" => "rejected",
         ]);
+
+        // Update seller verification status if exists
+        if ($seller->seller) {
+            $seller->seller->update([
+                "status" => "rejected",
+            ]);
+        }
 
         return redirect()
             ->route("admin.sellers.index")

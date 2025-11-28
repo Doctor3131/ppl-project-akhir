@@ -10,12 +10,24 @@ class SellerVerification extends Model
 {
     use HasFactory;
 
+    protected $table = "seller";
+
     protected $fillable = [
         "user_id",
-        "ktp_number",
-        "face_photo_path",
-        "ktp_photo_path",
-        "address",
+        "shop_name",
+        "shop_description",
+        "pic_name",
+        "pic_phone",
+        "pic_email",
+        "pic_ktp_number",
+        "street_address",
+        "rt",
+        "rw",
+        "kelurahan",
+        "kota_kabupaten",
+        "province",
+        "pic_photo_path",
+        "ktp_file_path",
         "status",
         "rejection_reason",
         "verified_at",
@@ -43,5 +55,21 @@ class SellerVerification extends Model
     public function isRejected(): bool
     {
         return $this->status === "rejected";
+    }
+
+    /**
+     * Get full address
+     */
+    public function getFullAddressAttribute(): string
+    {
+        return sprintf(
+            "%s, RT %s/RW %s, %s, %s, %s",
+            $this->street_address,
+            $this->rt,
+            $this->rw,
+            $this->kelurahan,
+            $this->kota_kabupaten,
+            $this->province,
+        );
     }
 }
