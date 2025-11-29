@@ -2,19 +2,39 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CatalogController;
+use App\Http\Controllers\RatingController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Seller\DashboardController as SellerDashboardController;
 use App\Http\Controllers\Seller\ProductController as SellerProductController;
+use App\Http\Controllers\Seller\ReportController as SellerReportController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\SellerController;
+use App\Http\Controllers\Admin\ReportController as AdminReportController;
 
 // Public routes
 Route::get("/", [HomeController::class, "index"])->name("home");
-Route::get("/products/{id}", [HomeController::class, "show"])->name(
-    "products.show",
+
+// SRS-MartPlace-04: Katalog produk dapat dilihat oleh pengunjung umum
+Route::get("/catalog", [CatalogController::class, "index"])->name(
+    "catalog.index",
 );
+Route::get("/catalog/{product}", [CatalogController::class, "show"])->name(
+    "catalog.show",
+);
+
+// SRS-MartPlace-06: Pemberian komentar dan rating
+Route::post("/products/{product}/rating", [
+    RatingController::class,
+    "store",
+])->name("rating.store");
+
+// Legacy product routes (can be redirected to catalog)
+Route::get("/products/{id}", function ($id) {
+    return redirect()->route("catalog.show", $id);
+})->name("products.show");
 
 // Authentication routes
 Route::middleware("guest")->group(function () {
@@ -43,6 +63,34 @@ Route::prefix("seller")
             "index",
         ])->name("dashboard");
         Route::resource("products", SellerProductController::class);
+
+        // SRS-MartPlace-12, 13, 14: Laporan untuk Penjual
+        Route::get("/reports/stock", [
+            SellerReportController::class,
+            "stockReport",
+        ])->name("reports.stock");
+        Route::get("/reports/rating", [
+            SellerReportController::class,
+            "ratingReport",
+        ])->name("reports.rating");
+        Route::get("/reports/low-stock", [
+            SellerReportController::class,
+            "lowStockReport",
+        ])->name("reports.low-stock");
+
+        // Export routes
+        Route::get("/reports/stock/export", [
+            SellerReportController::class,
+            "exportStockReport",
+        ])->name("reports.stock.export");
+        Route::get("/reports/rating/export", [
+            SellerReportController::class,
+            "exportRatingReport",
+        ])->name("reports.rating.export");
+        Route::get("/reports/low-stock/export", [
+            SellerReportController::class,
+            "exportLowStockReport",
+        ])->name("reports.low-stock.export");
     });
 
 // Admin routes
@@ -69,4 +117,32 @@ Route::prefix("admin")
             SellerController::class,
             "reject",
         ])->name("sellers.reject");
+
+        // SRS-MartPlace-09, 10, 11: Laporan untuk Platform
+        Route::get("/reports/seller-accounts", [
+            AdminReportController::class,
+            "sellerAccounts",
+        ])->name("reports.seller-accounts");
+        Route::get("/reports/sellers-by-province", [
+            AdminReportController::class,
+            "sellersByProvince",
+        ])->name("reports.sellers-by-province");
+        Route::get("/reports/products-by-rating", [
+            AdminReportController::class,
+            "productsByRating",
+        ])->name("reports.products-by-rating");
+
+        // Export routes
+        Route::get("/reports/seller-accounts/export", [
+            AdminReportController::class,
+            "exportSellerAccounts",
+        ])->name("reports.seller-accounts.export");
+        Route::get("/reports/sellers-by-province/export", [
+            AdminReportController::class,
+            "exportSellersByProvince",
+        ])->name("reports.sellers-by-province.export");
+        Route::get("/reports/products-by-rating/export", [
+            AdminReportController::class,
+            "exportProductsByRating",
+        ])->name("reports.products-by-rating.export");
     });
