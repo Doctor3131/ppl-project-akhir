@@ -170,7 +170,8 @@ Sekarang Anda cukup menjalankan **satu perintah saja**. Perintah ini akan menjal
 composer run dev
 ```
 
-(Atau `php run serve`)
+(Atau `php artisan serve`)
+(Kalau pake itu sekalian jalankan `npm run dev`)
 
 **Akses web di browser:**  
 [http://127.0.0.1:8000](http://127.0.0.1:8000)
