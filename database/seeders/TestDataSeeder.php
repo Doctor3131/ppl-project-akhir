@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\SellerVerification;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -26,6 +27,28 @@ class TestDataSeeder extends Seeder
             "email_verified_at" => now(),
         ]);
 
+        // Create seller verification data for seller1
+        SellerVerification::create([
+            "user_id" => $seller1->id,
+            "shop_name" => "John's Electronics Store",
+            "shop_description" =>
+                "Your one-stop shop for all electronic gadgets and accessories. We offer the latest technology products with competitive prices.",
+            "pic_name" => "John Anderson",
+            "pic_phone" => "081234567890",
+            "pic_email" => "john@electronics.com",
+            "pic_ktp_number" => "3201012345670001",
+            "street_address" => "Jl. Sudirman No. 123",
+            "rt" => "01",
+            "rw" => "05",
+            "kelurahan" => "Menteng",
+            "kota_kabupaten" => "Jakarta Pusat",
+            "province" => "DKI Jakarta",
+            "pic_photo_path" => "sellers/john_photo.jpg",
+            "ktp_file_path" => "sellers/john_ktp.jpg",
+            "status" => "approved",
+            "verified_at" => now(),
+        ]);
+
         $seller2 = User::create([
             "name" => "Sarah's Fashion",
             "email" => "sarah@fashion.com",
@@ -35,6 +58,28 @@ class TestDataSeeder extends Seeder
             "email_verified_at" => now(),
         ]);
 
+        // Create seller verification data for seller2
+        SellerVerification::create([
+            "user_id" => $seller2->id,
+            "shop_name" => "Sarah's Fashion Boutique",
+            "shop_description" =>
+                "Trendy fashion items for modern lifestyle. From casual wear to elegant outfits, we have everything you need to look stylish.",
+            "pic_name" => "Sarah Williams",
+            "pic_phone" => "081234567891",
+            "pic_email" => "sarah@fashion.com",
+            "pic_ktp_number" => "3273012345670002",
+            "street_address" => "Jl. Merdeka No. 45",
+            "rt" => "03",
+            "rw" => "08",
+            "kelurahan" => "Braga",
+            "kota_kabupaten" => "Bandung",
+            "province" => "Jawa Barat",
+            "pic_photo_path" => "sellers/sarah_photo.jpg",
+            "ktp_file_path" => "sellers/sarah_ktp.jpg",
+            "status" => "approved",
+            "verified_at" => now(),
+        ]);
+
         $seller3 = User::create([
             "name" => "Mike's Books",
             "email" => "mike@books.com",
@@ -42,6 +87,28 @@ class TestDataSeeder extends Seeder
             "role" => "seller",
             "status" => "pending",
             "email_verified_at" => now(),
+        ]);
+
+        // Create seller verification data for seller3 (pending status)
+        SellerVerification::create([
+            "user_id" => $seller3->id,
+            "shop_name" => "Mike's Book Corner",
+            "shop_description" =>
+                "A paradise for book lovers. Wide collection of books from various genres including fiction, non-fiction, educational, and more.",
+            "pic_name" => "Michael Brown",
+            "pic_phone" => "081234567892",
+            "pic_email" => "mike@books.com",
+            "pic_ktp_number" => "3578012345670003",
+            "street_address" => "Jl. Tunjungan No. 78",
+            "rt" => "02",
+            "rw" => "04",
+            "kelurahan" => "Genteng",
+            "kota_kabupaten" => "Surabaya",
+            "province" => "Jawa Timur",
+            "pic_photo_path" => "sellers/mike_photo.jpg",
+            "ktp_file_path" => "sellers/mike_ktp.jpg",
+            "status" => "pending",
+            "verified_at" => null,
         ]);
 
         // Get categories
