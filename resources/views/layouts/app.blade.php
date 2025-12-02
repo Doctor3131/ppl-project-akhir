@@ -23,8 +23,11 @@
                     <div class="flex">
                         <!-- Logo -->
                         <div class="shrink-0 flex items-center">
-                            <a href="{{ route('home') }}" class="text-xl font-bold text-indigo-600">
-                                E-Commerce
+                            <a href="{{ route('home') }}" class="flex items-center space-x-3">
+                                <!-- Logo Image -->
+                                <img src="{{ asset('images/LogoCampusMarket.png') }}" alt="Logo" class="h-10 w-10">
+                                <!-- Logo Text -->
+                                <span class="text-2xl font-black text-black">CAMPUSMARKET</span>
                             </a>
                         </div>
                     </div>

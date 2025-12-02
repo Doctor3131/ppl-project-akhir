@@ -40,6 +40,10 @@
 }
 
 @layer base {
+    /* Default text color */
+    body {
+        @apply text-black;
+    }
     *,
     ::after,
     ::before,
