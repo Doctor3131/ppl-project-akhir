@@ -170,7 +170,7 @@ Sekarang Anda cukup menjalankan **satu perintah saja**. Perintah ini akan menjal
 composer run dev
 ```
 
-(Atau `php run serve`)
+(Atau `php artisan serve` dan `npm run dev`)
 
 **Akses web di browser:**  
 [http://127.0.0.1:8000](http://127.0.0.1:8000)
@@ -189,6 +189,35 @@ Gunakan akun berikut untuk login:
 | Hidah     | hidah@gmail.com   | 12345678   |
 | Raya      | raya@gmail.com    | 12345678   |
 | Test User | test@example.com  | password   |
+
+---
+
+## 🔄 Setelah Git Pull (PENTING untuk Tim!)
+
+Setiap kali melakukan `git pull` dari branch teman, jalankan perintah berikut untuk memastikan environment Anda sinkron:
+
+```bash
+# 1. Install dependency baru (jika ada perubahan composer.json/package.json)
+composer install
+npm install
+
+# 2. Jalankan migration baru (jika ada perubahan database)
+php artisan migrate
+
+# 3. Buat symbolic link untuk storage (WAJIB untuk upload gambar)
+php artisan storage:link
+
+# 4. Clear semua cache
+php artisan view:clear
+php artisan route:clear
+php artisan config:clear
+php artisan cache:clear
+```
+
+### ⚠️ Catatan Penting:
+- **`php artisan storage:link`** - Wajib dijalankan sekali di setiap komputer. Symbolic link tidak ter-commit ke Git, jadi setiap developer harus membuatnya sendiri.
+- Jika gambar produk tidak muncul, kemungkinan besar symbolic link belum dibuat.
+- Jika ada error "View not found" atau "Route not found", jalankan perintah clear cache di atas.
 
 ---
 

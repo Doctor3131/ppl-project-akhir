@@ -5,43 +5,53 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Product;
+use App\Models\ProductRating;
 use App\Models\SellerVerification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ReportController extends Controller
 {
     /**
+     * Index - Halaman utama laporan admin dengan opsi export
+     */
+    public function index()
+    {
+        return view('admin.reports.index');
+    }
+
+    /**
      * SRS-MartPlace-09: Laporan daftar akun penjual aktif dan tidak aktif
+     * Format: No, Nama User, Nama PIC, Nama Toko, Status
+     * Sorting: Status (aktif dulu baru tidak aktif)
      */
     public function sellerAccounts(Request $request)
     {
         $query = User::where("role", "seller")
+            ->where("status", "approved") // Only approved sellers for SRS-09
             ->with("seller")
-            ->orderBy("status")
+            ->orderBy("is_active", "desc") // Aktif first
             ->orderBy("name");
 
-        // Filter by status
-        if ($request->filled("status")) {
-            $query->where("status", $request->status);
+        // Filter by activity status (is_active)
+        if ($request->filled("is_active")) {
+            $query->where("is_active", $request->is_active === "1");
         }
 
         $sellers = $query->get();
 
         // Statistics
         $stats = [
-            "total" => User::where("role", "seller")->count(),
+            "total" => User::where("role", "seller")->where("status", "approved")->count(),
             "active" => User::where("role", "seller")
                 ->where("status", "approved")
+                ->where("is_active", true)
                 ->count(),
             "inactive" => User::where("role", "seller")
-                ->where("status", "!=", "approved")
-                ->count(),
-            "pending" => User::where("role", "seller")
-                ->where("status", "pending")
-                ->count(),
-            "rejected" => User::where("role", "seller")
-                ->where("status", "rejected")
+                ->where("status", "approved")
+                ->where("is_active", false)
                 ->count(),
         ];
 
@@ -90,6 +100,7 @@ class ReportController extends Controller
 
     /**
      * SRS-MartPlace-11: Laporan daftar produk dan ratingnya yang diurutkan berdasarkan rating secara menurun
+     * Format: No, Produk, Kategori, Harga, Rating, Nama Toko, Propinsi (pemberi rating)
      */
     public function productsByRating(Request $request)
     {
@@ -106,19 +117,31 @@ class ReportController extends Controller
             $query->where("category_id", $request->category_id);
         }
 
-        // Filter by province
+        // Filter by province (rater's province)
         if ($request->filled("province")) {
-            $query->whereHas("user.seller", function ($q) use ($request) {
+            $query->whereHas("ratings", function ($q) use ($request) {
                 $q->where("province", $request->province);
             });
         }
 
-        // Get products with average rating
+        // Get products with average rating and rater provinces
         $products = $query
             ->get()
             ->map(function ($product) {
                 $product->average_rating = $product->averageRating();
                 $product->rating_count = $product->ratingCount();
+                
+                // Get all rater provinces with counts
+                $raterProvinces = $product->ratings()
+                    ->whereNotNull('province')
+                    ->select('province', DB::raw('count(*) as count'))
+                    ->groupBy('province')
+                    ->orderByDesc('count')
+                    ->get();
+                
+                $product->rater_provinces = $raterProvinces;
+                $product->primary_rater_province = $raterProvinces->first()?->province ?? '-';
+                
                 return $product;
             })
             ->sortByDesc("average_rating")
@@ -127,9 +150,9 @@ class ReportController extends Controller
         // Get categories for filter
         $categories = \App\Models\Category::orderBy("name")->get();
 
-        // Get provinces for filter
-        $provinces = SellerVerification::where("status", "approved")
-            ->distinct()
+        // Get provinces for filter (from ratings)
+        $provinces = ProductRating::distinct()
+            ->whereNotNull('province')
             ->pluck("province")
             ->sort()
             ->values();
@@ -141,57 +164,40 @@ class ReportController extends Controller
     }
 
     /**
-     * Export report to CSV
+     * Export report to PDF (SRS-MartPlace-09)
      */
     public function exportSellerAccounts()
     {
         $sellers = User::where("role", "seller")
+            ->where("status", "approved")
             ->with("seller")
-            ->orderBy("status")
+            ->orderBy("is_active", "desc")
             ->orderBy("name")
             ->get();
 
-        $filename = "seller-accounts-" . date("Y-m-d") . ".csv";
-
-        $headers = [
-            "Content-Type" => "text/csv",
-            "Content-Disposition" => 'attachment; filename="' . $filename . '"',
+        // Statistics
+        $stats = [
+            "total" => User::where("role", "seller")->where("status", "approved")->count(),
+            "active" => User::where("role", "seller")
+                ->where("status", "approved")
+                ->where("is_active", true)
+                ->count(),
+            "inactive" => User::where("role", "seller")
+                ->where("status", "approved")
+                ->where("is_active", false)
+                ->count(),
         ];
 
-        $callback = function () use ($sellers) {
-            $file = fopen("php://output", "w");
+        $adminName = Auth::user()->name;
 
-            // Header
-            fputcsv($file, [
-                "No",
-                "Nama",
-                "Email",
-                "Nama Toko",
-                "Status",
-                "Tanggal Registrasi",
-            ]);
-
-            // Data
-            $no = 1;
-            foreach ($sellers as $seller) {
-                fputcsv($file, [
-                    $no++,
-                    $seller->name,
-                    $seller->email,
-                    $seller->seller->shop_name ?? "-",
-                    ucfirst($seller->status),
-                    $seller->created_at->format("d/m/Y H:i"),
-                ]);
-            }
-
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
+        $pdf = Pdf::loadView('admin.reports.pdf.seller-accounts', compact('sellers', 'stats', 'adminName'));
+        $pdf->setPaper('A4', 'portrait');
+        
+        return $pdf->download('laporan-akun-penjual-' . date('Y-m-d') . '.pdf');
     }
 
     /**
-     * Export sellers by province to CSV
+     * Export sellers by province to PDF (SRS-MartPlace-10)
      */
     public function exportSellersByProvince()
     {
@@ -201,57 +207,23 @@ class ReportController extends Controller
             ->orderBy("shop_name")
             ->get();
 
-        $filename = "sellers-by-province-" . date("Y-m-d") . ".csv";
+        // Statistics by province
+        $statsByProvince = SellerVerification::where("status", "approved")
+            ->select("province", DB::raw("count(*) as total"))
+            ->groupBy("province")
+            ->orderBy("total", "desc")
+            ->get();
 
-        $headers = [
-            "Content-Type" => "text/csv",
-            "Content-Disposition" => 'attachment; filename="' . $filename . '"',
-        ];
+        $adminName = Auth::user()->name;
 
-        $callback = function () use ($sellers) {
-            $file = fopen("php://output", "w");
-
-            // Header
-            fputcsv($file, [
-                "No",
-                "Nama Toko",
-                "PIC",
-                "Email",
-                "Telepon",
-                "Provinsi",
-                "Kota/Kabupaten",
-                "Alamat",
-            ]);
-
-            // Data
-            $no = 1;
-            foreach ($sellers as $seller) {
-                fputcsv($file, [
-                    $no++,
-                    $seller->shop_name,
-                    $seller->pic_name,
-                    $seller->pic_email,
-                    $seller->pic_phone,
-                    $seller->province,
-                    $seller->kota_kabupaten,
-                    $seller->street_address .
-                    ", RT " .
-                    $seller->rt .
-                    "/RW " .
-                    $seller->rw .
-                    ", " .
-                    $seller->kelurahan,
-                ]);
-            }
-
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
+        $pdf = Pdf::loadView('admin.reports.pdf.sellers-by-province', compact('sellers', 'statsByProvince', 'adminName'));
+        $pdf->setPaper('A4', 'portrait');
+        
+        return $pdf->download('laporan-penjual-per-provinsi-' . date('Y-m-d') . '.pdf');
     }
 
     /**
-     * Export products by rating to CSV
+     * Export products by rating to PDF (SRS-MartPlace-11)
      */
     public function exportProductsByRating()
     {
@@ -263,50 +235,27 @@ class ReportController extends Controller
             ->map(function ($product) {
                 $product->average_rating = $product->averageRating();
                 $product->rating_count = $product->ratingCount();
+                
+                // Get all rater provinces
+                $raterProvinces = $product->ratings()
+                    ->whereNotNull('province')
+                    ->select('province', DB::raw('count(*) as count'))
+                    ->groupBy('province')
+                    ->orderByDesc('count')
+                    ->get();
+                
+                $product->rater_provinces = $raterProvinces;
+                $product->primary_rater_province = $raterProvinces->first()?->province ?? '-';
+                
                 return $product;
             })
             ->sortByDesc("average_rating");
 
-        $filename = "products-by-rating-" . date("Y-m-d") . ".csv";
+        $adminName = Auth::user()->name;
 
-        $headers = [
-            "Content-Type" => "text/csv",
-            "Content-Disposition" => 'attachment; filename="' . $filename . '"',
-        ];
-
-        $callback = function () use ($products) {
-            $file = fopen("php://output", "w");
-
-            // Header
-            fputcsv($file, [
-                "No",
-                "Nama Produk",
-                "Nama Toko",
-                "Kategori",
-                "Harga",
-                "Rating",
-                "Jumlah Rating",
-                "Provinsi",
-            ]);
-
-            // Data
-            $no = 1;
-            foreach ($products as $product) {
-                fputcsv($file, [
-                    $no++,
-                    $product->name,
-                    $product->user->seller->shop_name ?? "-",
-                    $product->category->name ?? "-",
-                    "Rp " . number_format($product->price, 0, ",", "."),
-                    number_format($product->average_rating, 1),
-                    $product->rating_count,
-                    $product->user->seller->province ?? "-",
-                ]);
-            }
-
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
+        $pdf = Pdf::loadView('admin.reports.pdf.products-by-rating', compact('products', 'adminName'));
+        $pdf->setPaper('A4', 'portrait');
+        
+        return $pdf->download('laporan-produk-rating-' . date('Y-m-d') . '.pdf');
     }
 }

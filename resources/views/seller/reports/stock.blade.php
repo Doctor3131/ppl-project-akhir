@@ -1,22 +1,36 @@
 @extends('layouts.app')
 
-@section('title', 'Laporan Stock Produk')
+@section('title', 'Laporan Produk Berdasarkan Stock')
 
 @section('content')
 <div class="container mx-auto px-4 py-8">
     <!-- Header -->
     <div class="mb-8 flex justify-between items-center">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900">Laporan Stock Produk</h1>
-            <p class="mt-2 text-gray-600">SRS-MartPlace-12: Daftar stock produk diurutkan berdasarkan stock (menurun)</p>
+            <nav class="text-sm mb-2">
+                <a href="{{ route('seller.reports.index') }}" class="text-indigo-600 hover:underline">Laporan</a>
+                <span class="text-gray-500 mx-2">/</span>
+                <span class="text-gray-500">Berdasarkan Stock</span>
+            </nav>
+            <h1 class="text-3xl font-bold text-gray-900">Laporan Produk Berdasarkan Stock</h1>
+            <p class="mt-2 text-gray-600">SRS-MartPlace-12: Daftar produk diurutkan berdasarkan stock (menurun)</p>
         </div>
-        <a href="{{ route('seller.reports.stock.export') }}"
-           class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-200 flex items-center gap-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            Export CSV
-        </a>
+        <div class="flex gap-2">
+            <a href="{{ route('seller.reports.index') }}"
+               class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-200 flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Kembali
+            </a>
+            <a href="{{ route('seller.reports.stock.export') }}"
+               class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition duration-200 flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Export PDF
+            </a>
+        </div>
     </div>
 
     <!-- Statistics Cards -->

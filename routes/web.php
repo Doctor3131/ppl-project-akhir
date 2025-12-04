@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Seller\DashboardController as SellerDashboardController;
 use App\Http\Controllers\Seller\ProductController as SellerProductController;
 use App\Http\Controllers\Seller\ReportController as SellerReportController;
+use App\Http\Controllers\Seller\ReactivationController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\SellerController;
@@ -53,10 +54,20 @@ Route::post("/logout", [LoginController::class, "logout"])
     ->name("logout")
     ->middleware("auth");
 
-// Seller routes
+// Seller reactivation routes (for deactivated sellers)
 Route::prefix("seller")
     ->name("seller.")
     ->middleware(["auth", \App\Http\Middleware\SellerMiddleware::class])
+    ->group(function () {
+        // Reactivation request page (accessible even when deactivated)
+        Route::get("/reactivation", [ReactivationController::class, "show"])->name("reactivation.show");
+        Route::post("/reactivation", [ReactivationController::class, "store"])->name("reactivation.store");
+    });
+
+// Seller routes (require active status)
+Route::prefix("seller")
+    ->name("seller.")
+    ->middleware(["auth", \App\Http\Middleware\SellerMiddleware::class, "seller.active"])
     ->group(function () {
         Route::get("/dashboard", [
             SellerDashboardController::class,
@@ -65,6 +76,10 @@ Route::prefix("seller")
         Route::resource("products", SellerProductController::class);
 
         // SRS-MartPlace-12, 13, 14: Laporan untuk Penjual
+        Route::get("/reports", [
+            SellerReportController::class,
+            "index",
+        ])->name("reports.index");
         Route::get("/reports/stock", [
             SellerReportController::class,
             "stockReport",
@@ -118,7 +133,35 @@ Route::prefix("admin")
             "reject",
         ])->name("sellers.reject");
 
+        // Seller activation/deactivation management
+        Route::post("/sellers/{id}/deactivate", [
+            SellerController::class,
+            "deactivate",
+        ])->name("sellers.deactivate");
+        Route::post("/sellers/{id}/activate", [
+            SellerController::class,
+            "activate",
+        ])->name("sellers.activate");
+        
+        // Reactivation requests management
+        Route::get("/sellers/reactivation-requests", [
+            SellerController::class,
+            "pendingReactivations",
+        ])->name("sellers.reactivation-requests");
+        Route::post("/sellers/{id}/approve-reactivation", [
+            SellerController::class,
+            "approveReactivation",
+        ])->name("sellers.approve-reactivation");
+        Route::post("/sellers/{id}/reject-reactivation", [
+            SellerController::class,
+            "rejectReactivation",
+        ])->name("sellers.reject-reactivation");
+
         // SRS-MartPlace-09, 10, 11: Laporan untuk Platform
+        Route::get("/reports", [
+            AdminReportController::class,
+            "index",
+        ])->name("reports.index");
         Route::get("/reports/seller-accounts", [
             AdminReportController::class,
             "sellerAccounts",

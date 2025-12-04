@@ -21,6 +21,7 @@ class RatingController extends Controller
             "visitor_name" => "required|string|max:255",
             "visitor_phone" => "required|string|max:20",
             "visitor_email" => "required|email|max:255",
+            "province" => "required|string|max:100",
             "rating" => "required|integer|min:1|max:5",
             "comment" => "nullable|string|max:1000",
         ]);
@@ -35,6 +36,7 @@ class RatingController extends Controller
             "visitor_name" => $request->visitor_name,
             "visitor_phone" => $request->visitor_phone,
             "visitor_email" => $request->visitor_email,
+            "province" => $request->province,
             "rating" => $request->rating,
             "comment" => $request->comment,
         ]);

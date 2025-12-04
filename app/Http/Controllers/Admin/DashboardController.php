@@ -54,9 +54,9 @@ class DashboardController extends Controller
             ->orderBy("total", "desc")
             ->get();
 
-        // SRS-07: Jumlah user penjual aktif dan tidak aktif
-        $sellerStatusData = [
-            "active" => User::where("role", "seller")
+        // SRS-07: Jumlah user penjual berdasarkan approval status
+        $sellerApprovalData = [
+            "approved" => User::where("role", "seller")
                 ->where("status", "approved")
                 ->count(),
             "pending" => User::where("role", "seller")
@@ -66,6 +66,25 @@ class DashboardController extends Controller
                 ->where("status", "rejected")
                 ->count(),
         ];
+
+        // SRS-07: Jumlah user penjual aktif dan tidak aktif (based on activity)
+        $sellerActivityData = [
+            "active" => User::where("role", "seller")
+                ->where("status", "approved")
+                ->where("is_active", true)
+                ->count(),
+            "inactive" => User::where("role", "seller")
+                ->where("status", "approved")
+                ->where("is_active", false)
+                ->count(),
+        ];
+
+        // Pending reactivation requests
+        $pendingReactivations = User::where("role", "seller")
+            ->where("status", "approved")
+            ->where("is_active", false)
+            ->whereNotNull("reactivation_requested_at")
+            ->count();
 
         // SRS-07: Jumlah pengunjung yang memberikan komentar dan rating
         $ratingsData = [
@@ -156,7 +175,9 @@ class DashboardController extends Controller
                 "totalCategories",
                 "productsByCategory",
                 "sellersByProvince",
-                "sellerStatusData",
+                "sellerApprovalData",
+                "sellerActivityData",
+                "pendingReactivations",
                 "ratingsData",
                 "ratingDistribution",
                 "recentRatings",

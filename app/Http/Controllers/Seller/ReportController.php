@@ -4,13 +4,24 @@ namespace App\Http\Controllers\Seller;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ReportController extends Controller
 {
     /**
+     * Index - Halaman utama laporan dengan opsi export
+     */
+    public function index()
+    {
+        return view('seller.reports.index');
+    }
+
+    /**
      * SRS-MartPlace-12: Laporan daftar stock produk yang diurutkan berdasarkan stock secara menurun
+     * Format: No, Produk, Kategori, Harga, Rating, Stock
      */
     public function stockReport(Request $request)
     {
@@ -31,14 +42,12 @@ class ReportController extends Controller
         });
 
         // Get categories for filter
-        $categories = \App\Models\Category::orderBy("name")->get();
+        $categories = Category::orderBy("name")->get();
 
         // Statistics
         $stats = [
             "total_products" => Product::where("user_id", Auth::id())->count(),
-            "total_stock" => Product::where("user_id", Auth::id())->sum(
-                "stock",
-            ),
+            "total_stock" => Product::where("user_id", Auth::id())->sum("stock"),
             "low_stock" => Product::where("user_id", Auth::id())
                 ->where("stock", "<", 2)
                 ->count(),
@@ -55,6 +64,7 @@ class ReportController extends Controller
 
     /**
      * SRS-MartPlace-13: Laporan daftar stock produk yang diurutkan berdasarkan rating secara menurun
+     * Format: No, Produk, Kategori, Harga, Stock, Rating
      */
     public function ratingReport(Request $request)
     {
@@ -80,7 +90,7 @@ class ReportController extends Controller
             ->values();
 
         // Get categories for filter
-        $categories = \App\Models\Category::orderBy("name")->get();
+        $categories = Category::orderBy("name")->get();
 
         // Statistics
         $stats = [
@@ -102,20 +112,25 @@ class ReportController extends Controller
 
     /**
      * SRS-MartPlace-14: Laporan daftar stock barang yang harus segera di pesan (stock < 2)
+     * Format: No, Produk, Kategori, Harga, Stock
+     * Sorting: berdasarkan kategori dan produk
      */
     public function lowStockReport(Request $request)
     {
         $query = Product::where("user_id", Auth::id())
             ->where("stock", "<", 2)
             ->with(["category", "ratings"])
-            ->orderBy("stock", "asc");
+            ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->orderBy('categories.name', 'asc')
+            ->orderBy('products.name', 'asc')
+            ->select('products.*');
 
         // Filter by category
         if ($request->filled("category_id")) {
-            $query->where("category_id", $request->category_id);
+            $query->where("products.category_id", $request->category_id);
         }
 
-        // Get products with ratings
+        // Get products
         $products = $query->get()->map(function ($product) {
             $product->average_rating = $product->averageRating();
             $product->rating_count = $product->ratingCount();
@@ -123,7 +138,7 @@ class ReportController extends Controller
         });
 
         // Get categories for filter
-        $categories = \App\Models\Category::orderBy("name")->get();
+        $categories = Category::orderBy("name")->get();
 
         // Statistics
         $stats = [
@@ -142,7 +157,7 @@ class ReportController extends Controller
     }
 
     /**
-     * Export stock report to CSV
+     * Export stock report to PDF (SRS-MartPlace-12)
      */
     public function exportStockReport()
     {
@@ -156,49 +171,26 @@ class ReportController extends Controller
                 return $product;
             });
 
-        $filename = "stock-report-" . date("Y-m-d") . ".csv";
-
-        $headers = [
-            "Content-Type" => "text/csv",
-            "Content-Disposition" => 'attachment; filename="' . $filename . '"',
+        // Statistics
+        $stats = [
+            "total_products" => Product::where("user_id", Auth::id())->count(),
+            "total_stock" => Product::where("user_id", Auth::id())->sum("stock"),
+            "low_stock" => Product::where("user_id", Auth::id())->where("stock", "<", 2)->count(),
+            "out_of_stock" => Product::where("user_id", Auth::id())->where("stock", 0)->count(),
         ];
 
-        $callback = function () use ($products) {
-            $file = fopen("php://output", "w");
+        // Get shop name and seller name
+        $shopName = Auth::user()->seller->shop_name ?? Auth::user()->name;
+        $sellerName = Auth::user()->name;
 
-            // Header
-            fputcsv($file, [
-                "No",
-                "Nama Produk",
-                "Kategori",
-                "Harga",
-                "Stock",
-                "Rating",
-                "Jumlah Rating",
-            ]);
-
-            // Data
-            $no = 1;
-            foreach ($products as $product) {
-                fputcsv($file, [
-                    $no++,
-                    $product->name,
-                    $product->category->name ?? "-",
-                    "Rp " . number_format($product->price, 0, ",", "."),
-                    $product->stock,
-                    number_format($product->average_rating, 1),
-                    $product->rating_count,
-                ]);
-            }
-
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
+        $pdf = Pdf::loadView('seller.reports.pdf.stock', compact('products', 'stats', 'shopName', 'sellerName'));
+        $pdf->setPaper('A4', 'portrait');
+        
+        return $pdf->download('laporan-stok-produk-' . date('Y-m-d') . '.pdf');
     }
 
     /**
-     * Export rating report to CSV
+     * Export rating report to PDF (SRS-MartPlace-13)
      */
     public function exportRatingReport()
     {
@@ -212,56 +204,36 @@ class ReportController extends Controller
             })
             ->sortByDesc("average_rating");
 
-        $filename = "rating-report-" . date("Y-m-d") . ".csv";
-
-        $headers = [
-            "Content-Type" => "text/csv",
-            "Content-Disposition" => 'attachment; filename="' . $filename . '"',
+        // Statistics
+        $stats = [
+            "total_products" => Product::where("user_id", Auth::id())->count(),
+            "average_rating" => $products->avg("average_rating") ? round($products->avg("average_rating"), 1) : 0,
+            "total_ratings" => $products->sum("rating_count"),
+            "products_with_ratings" => $products->where("rating_count", ">", 0)->count(),
         ];
 
-        $callback = function () use ($products) {
-            $file = fopen("php://output", "w");
+        // Get shop name and seller name
+        $shopName = Auth::user()->seller->shop_name ?? Auth::user()->name;
+        $sellerName = Auth::user()->name;
 
-            // Header
-            fputcsv($file, [
-                "No",
-                "Nama Produk",
-                "Kategori",
-                "Harga",
-                "Stock",
-                "Rating",
-                "Jumlah Rating",
-            ]);
-
-            // Data
-            $no = 1;
-            foreach ($products as $product) {
-                fputcsv($file, [
-                    $no++,
-                    $product->name,
-                    $product->category->name ?? "-",
-                    "Rp " . number_format($product->price, 0, ",", "."),
-                    $product->stock,
-                    number_format($product->average_rating, 1),
-                    $product->rating_count,
-                ]);
-            }
-
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
+        $pdf = Pdf::loadView('seller.reports.pdf.rating', compact('products', 'stats', 'shopName', 'sellerName'));
+        $pdf->setPaper('A4', 'portrait');
+        
+        return $pdf->download('laporan-rating-produk-' . date('Y-m-d') . '.pdf');
     }
 
     /**
-     * Export low stock report to CSV
+     * Export low stock report to PDF (SRS-MartPlace-14)
      */
     public function exportLowStockReport()
     {
         $products = Product::where("user_id", Auth::id())
             ->where("stock", "<", 2)
             ->with(["category", "ratings"])
-            ->orderBy("stock", "asc")
+            ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->orderBy('categories.name', 'asc')
+            ->orderBy('products.name', 'asc')
+            ->select('products.*')
             ->get()
             ->map(function ($product) {
                 $product->average_rating = $product->averageRating();
@@ -269,48 +241,23 @@ class ReportController extends Controller
                 return $product;
             });
 
-        $filename = "low-stock-report-" . date("Y-m-d") . ".csv";
-
-        $headers = [
-            "Content-Type" => "text/csv",
-            "Content-Disposition" => 'attachment; filename="' . $filename . '"',
+        // Statistics
+        $stats = [
+            "low_stock_count" => $products->count(),
+            "out_of_stock" => $products->where("stock", 0)->count(),
+            "stock_1" => $products->where("stock", 1)->count(),
+            "total_value" => $products->sum(function ($product) {
+                return $product->price * $product->stock;
+            }),
         ];
 
-        $callback = function () use ($products) {
-            $file = fopen("php://output", "w");
+        // Get shop name and seller name
+        $shopName = Auth::user()->seller->shop_name ?? Auth::user()->name;
+        $sellerName = Auth::user()->name;
 
-            // Header
-            fputcsv($file, [
-                "No",
-                "Nama Produk",
-                "Kategori",
-                "Harga",
-                "Stock",
-                "Rating",
-                "Jumlah Rating",
-                "Status",
-            ]);
-
-            // Data
-            $no = 1;
-            foreach ($products as $product) {
-                $status = $product->stock == 0 ? "Habis" : "Segera Habis";
-
-                fputcsv($file, [
-                    $no++,
-                    $product->name,
-                    $product->category->name ?? "-",
-                    "Rp " . number_format($product->price, 0, ",", "."),
-                    $product->stock,
-                    number_format($product->average_rating, 1),
-                    $product->rating_count,
-                    $status,
-                ]);
-            }
-
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
+        $pdf = Pdf::loadView('seller.reports.pdf.low-stock', compact('products', 'stats', 'shopName', 'sellerName'));
+        $pdf->setPaper('A4', 'portrait');
+        
+        return $pdf->download('laporan-stok-rendah-' . date('Y-m-d') . '.pdf');
     }
 }

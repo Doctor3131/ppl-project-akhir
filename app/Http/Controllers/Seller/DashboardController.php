@@ -65,15 +65,13 @@ class DashboardController extends Controller
 
         // SRS-08: Sebaran pemberi rating berdasarkan lokasi propinsi
         $ratingsByProvince = ProductRating::select(
-            DB::raw(
-                "COALESCE(SPLIT_PART(visitor_email, '@', 2), 'Unknown') as domain",
-            ),
+            DB::raw("COALESCE(province, 'Tidak Diketahui') as province_name"),
             DB::raw("count(*) as total"),
         )
             ->whereHas("product", function ($q) use ($seller) {
                 $q->where("user_id", $seller->id);
             })
-            ->groupBy("domain")
+            ->groupBy("province")
             ->orderBy("total", "desc")
             ->take(10)
             ->get();

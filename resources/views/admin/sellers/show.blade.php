@@ -20,7 +20,7 @@
             <h1 class="text-3xl font-bold text-gray-900">Detail Seller</h1>
             <p class="mt-2 text-gray-600">Informasi lengkap registrasi seller</p>
         </div>
-        <div>
+        <div class="flex items-center gap-2">
             @if($seller->status === 'pending')
                 <span class="px-4 py-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
                     Pending
@@ -29,6 +29,15 @@
                 <span class="px-4 py-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                     Approved
                 </span>
+                @if($seller->is_active)
+                    <span class="px-4 py-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                        Aktif
+                    </span>
+                @else
+                    <span class="px-4 py-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                        Non-aktif
+                    </span>
+                @endif
             @else
                 <span class="px-4 py-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-red-100 text-red-800">
                     Rejected
@@ -298,6 +307,94 @@
                         <p class="mt-2 text-xs text-green-600">
                             Disetujui pada: {{ $seller->seller->verified_at->format('d F Y, H:i') }}
                         </p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Status & Actions -->
+            <div class="bg-white rounded-lg shadow overflow-hidden">
+                <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900">Status Aktif</h3>
+                </div>
+                <div class="px-6 py-4 space-y-4">
+                    <!-- Current Status -->
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">Status Saat Ini:</span>
+                        @if($seller->is_active)
+                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                Aktif
+                            </span>
+                        @else
+                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                Non-aktif
+                            </span>
+                        @endif
+                    </div>
+
+                    <!-- Last Login -->
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">Login Terakhir:</span>
+                        <span class="text-sm text-gray-900">
+                            @if($seller->last_login_at)
+                                {{ $seller->last_login_at->format('d M Y, H:i') }}
+                                <span class="text-gray-500">({{ $seller->last_login_at->diffForHumans() }})</span>
+                            @else
+                                <span class="text-gray-400">Belum pernah login</span>
+                            @endif
+                        </span>
+                    </div>
+
+                    @if(!$seller->is_active)
+                        <!-- Deactivation Info -->
+                        @if($seller->deactivated_at)
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600">Dinonaktifkan:</span>
+                            <span class="text-sm text-red-600">{{ $seller->deactivated_at->format('d M Y, H:i') }}</span>
+                        </div>
+                        @endif
+                        @if($seller->deactivation_reason)
+                        <div>
+                            <span class="text-sm text-gray-600">Alasan:</span>
+                            <p class="text-sm text-gray-900 mt-1 bg-gray-50 p-2 rounded">{{ $seller->deactivation_reason }}</p>
+                        </div>
+                        @endif
+                        @if($seller->hasRequestedReactivation())
+                        <div class="bg-orange-50 border border-orange-200 rounded-lg p-3">
+                            <p class="text-sm text-orange-800">
+                                <strong>Request Aktivasi Ulang</strong><br>
+                                Diajukan: {{ $seller->reactivation_requested_at->format('d M Y, H:i') }}
+                            </p>
+                        </div>
+                        @endif
+                    @endif
+
+                    <!-- Action Buttons -->
+                    <div class="pt-4 border-t border-gray-200">
+                        @if($seller->is_active)
+                            <form action="{{ route('admin.sellers.deactivate', $seller->id) }}" method="POST" class="w-full">
+                                @csrf
+                                <button type="submit"
+                                    onclick="return confirm('Apakah Anda yakin ingin menonaktifkan seller ini?');"
+                                    class="w-full flex justify-center items-center px-4 py-3 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path>
+                                    </svg>
+                                    Nonaktifkan Seller
+                                </button>
+                            </form>
+                        @else
+                            <form action="{{ route('admin.sellers.activate', $seller->id) }}" method="POST" class="w-full">
+                                @csrf
+                                <button type="submit"
+                                    onclick="return confirm('Apakah Anda yakin ingin mengaktifkan kembali seller ini?');"
+                                    class="w-full flex justify-center items-center px-4 py-3 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    Aktifkan Seller
+                                </button>
+                            </form>
                         @endif
                     </div>
                 </div>

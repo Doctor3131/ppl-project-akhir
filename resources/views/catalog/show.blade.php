@@ -186,7 +186,7 @@
             <form action="{{ route('rating.store', $product->id) }}" method="POST" class="space-y-6">
                 @csrf
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label for="visitor_name" class="block text-sm font-medium text-gray-700 mb-2">
                             Nama Lengkap <span class="text-red-500">*</span>
@@ -224,6 +224,23 @@
                                required
                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                                placeholder="email@example.com">
+                    </div>
+
+                    <div>
+                        <label for="province" class="block text-sm font-medium text-gray-700 mb-2">
+                            Provinsi <span class="text-red-500">*</span>
+                        </label>
+                        <select name="province"
+                                id="province"
+                                required
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            <option value="">Pilih Provinsi</option>
+                            @foreach (\Indonesia::allProvinces() as $prov)
+                                <option value="{{ $prov->name }}" {{ old('province') == $prov->name ? 'selected' : '' }}>
+                                    {{ $prov->name }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
 

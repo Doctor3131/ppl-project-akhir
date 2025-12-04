@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Listeners\UpdateLastLoginAt;
+use Illuminate\Auth\Events\Login;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Register login event listener to track last_login_at
+        Event::listen(Login::class, UpdateLastLoginAt::class);
     }
 }

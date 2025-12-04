@@ -12,6 +12,7 @@ class ProductRating extends Model
         "visitor_name",
         "visitor_phone",
         "visitor_email",
+        "province",
         "rating",
         "comment",
     ];
