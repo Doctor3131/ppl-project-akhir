@@ -6,22 +6,23 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class SellerMiddleware
+class EnsureProfileIsComplete
 {
     /**
      * Handle an incoming request.
+     * Ensures that the authenticated user has completed their profile.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
         if (!auth()->check()) {
-            return redirect()->route("login");
+            return redirect()->route('login');
         }
 
         $user = auth()->user();
 
-        // Check if email is verified
+        // Check if email is verified first
         if (!$user->hasVerifiedEmail()) {
             return redirect()->route('verification.notice');
         }
@@ -32,21 +33,6 @@ class SellerMiddleware
                 ->with('info', 'Silakan lengkapi profil Anda terlebih dahulu.');
         }
 
-        if (!$user->isSeller()) {
-            abort(403, "Unauthorized access");
-        }
-
-        // For pending sellers, allow access to reactivation routes
-        $currentRoute = $request->route()->getName();
-        if (in_array($currentRoute, ['seller.reactivation.show', 'seller.reactivation.store', 'seller.pending'])) {
-            return $next($request);
-        }
-
-        if (!$user->isApproved()) {
-            return redirect()->route('seller.pending');
-        }
-
         return $next($request);
     }
 }
-

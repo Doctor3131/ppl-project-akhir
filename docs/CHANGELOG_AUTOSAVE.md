@@ -1,5 +1,35 @@
 # Changelog - Form Auto-Save Feature
 
+## [1.1.0] - 2025-12-05
+
+### 🐛 Bug Fixes
+
+#### Catalog Search Improvements
+- **Fix Shop Name Search**: Fixed shop name search filter that wasn't working properly
+  - Changed query from checking `user.status` to `seller.status` for approved sellers
+  - Now correctly filters products from approved sellers when searching by shop name
+
+### ✨ New Features
+
+#### Catalog Filter Enhancements
+- **Dependent City Dropdown**: Added dynamic city dropdown that filters based on selected province
+  - New API endpoint: `/api/location/seller-cities?province=NAME`
+  - Cities list updates automatically when province is changed
+  - Only shows cities where approved sellers exist
+
+#### Home Route Change
+- **Home Redirect to Catalog**: Home page (`/`) now redirects to catalog (`/catalog`)
+  - Provides consistent user experience
+  - Single entry point for product browsing
+
+### 📝 Files Modified
+- `app/Http/Controllers/CatalogController.php` - Fixed seller status check
+- `app/Http/Controllers/Api/LocationController.php` - Added `getCitiesByProvinceName()` method
+- `routes/web.php` - Added `/api/location/seller-cities` route, changed home to redirect
+- `resources/views/catalog/index.blade.php` - Added JavaScript for dependent dropdown
+
+---
+
 ## [1.0.0] - 2024
 
 ### 🎉 New Features

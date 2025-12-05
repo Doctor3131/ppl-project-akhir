@@ -183,12 +183,32 @@ composer run dev
 
 Gunakan akun berikut untuk login:
 
-| Nama      | Email             | Password   |
-|-----------|-------------------|------------|
-| Taqi      | taqi@gmail.com    | 12345678   |
-| Hidah     | hidah@gmail.com   | 12345678   |
-| Raya      | raya@gmail.com    | 12345678   |
-| Test User | test@example.com  | password   |
+| Nama      | Email             | Password   | Role   |
+|-----------|-------------------|------------|--------|
+| Taqi      | taqi@gmail.com    | 12345678   | Seller |
+| Hidah     | hidah@gmail.com   | 12345678   | Seller |
+| Raya      | raya@gmail.com    | 12345678   | Seller |
+| Test User | test@example.com  | password   | Seller |
+| Admin     | admin@example.com | password   | Admin  |
+
+---
+
+## 📧 Email Verification (Development)
+
+Registrasi seller baru memerlukan **email verification**. Untuk development, email akan ditulis ke log file (tidak perlu setup SMTP).
+
+**Cara melihat link verifikasi:**
+```bash
+# Buka file log terbaru
+cat storage/logs/laravel.log | tail -100
+```
+
+Cari baris yang mengandung link verifikasi seperti:
+```
+http://127.0.0.1:8000/verify-email/...
+```
+
+> **Tip:** Jika ingin menggunakan email asli (Mailtrap), ubah konfigurasi `MAIL_*` di file `.env`
 
 ---
 
@@ -204,10 +224,13 @@ npm install
 # 2. Jalankan migration baru (jika ada perubahan database)
 php artisan migrate
 
-# 3. Buat symbolic link untuk storage (WAJIB untuk upload gambar)
+# 3. Publish vendor assets (untuk package indonesia - lokasi dropdown)
+php artisan vendor:publish --provider="Laravolt\Indonesia\ServiceProvider"
+
+# 4. Buat symbolic link untuk storage (WAJIB untuk upload gambar)
 php artisan storage:link
 
-# 4. Clear semua cache
+# 5. Clear semua cache
 php artisan view:clear
 php artisan route:clear
 php artisan config:clear
@@ -216,6 +239,7 @@ php artisan cache:clear
 
 ### ⚠️ Catatan Penting:
 - **`php artisan storage:link`** - Wajib dijalankan sekali di setiap komputer. Symbolic link tidak ter-commit ke Git, jadi setiap developer harus membuatnya sendiri.
+- **`php artisan vendor:publish`** - Wajib dijalankan sekali untuk publish config dan migration dari package `laravolt/indonesia` (dropdown provinsi/kota).
 - Jika gambar produk tidak muncul, kemungkinan besar symbolic link belum dibuat.
 - Jika ada error "View not found" atau "Route not found", jalankan perintah clear cache di atas.
 

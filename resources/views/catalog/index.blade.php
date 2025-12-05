@@ -256,3 +256,63 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const provinceSelect = document.getElementById('province');
+    const citySelect = document.getElementById('kota_kabupaten');
+    const currentCity = '{{ request('kota_kabupaten') }}';
+    
+    // Store original cities for reference
+    const originalCities = [];
+    for (let option of citySelect.options) {
+        if (option.value) {
+            originalCities.push(option.value);
+        }
+    }
+    
+    provinceSelect.addEventListener('change', function() {
+        const provinceName = this.value;
+        
+        // Reset city dropdown
+        citySelect.innerHTML = '<option value="">Semua Kota</option>';
+        
+        if (!provinceName) {
+            // If no province selected, show all cities
+            fetch('/api/location/seller-cities')
+                .then(response => response.json())
+                .then(cities => {
+                    cities.forEach(city => {
+                        const option = document.createElement('option');
+                        option.value = city;
+                        option.textContent = city;
+                        if (city === currentCity) {
+                            option.selected = true;
+                        }
+                        citySelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching cities:', error);
+                });
+        } else {
+            // Fetch cities for selected province
+            fetch('/api/location/seller-cities?province=' + encodeURIComponent(provinceName))
+                .then(response => response.json())
+                .then(cities => {
+                    cities.forEach(city => {
+                        const option = document.createElement('option');
+                        option.value = city;
+                        option.textContent = city;
+                        citySelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching cities:', error);
+                });
+        }
+    });
+});
+</script>
+@endpush

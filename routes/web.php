@@ -6,6 +6,9 @@ use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\CompleteProfileController;
+use App\Http\Controllers\Auth\EmailVerificationController;
+use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Seller\DashboardController as SellerDashboardController;
 use App\Http\Controllers\Seller\ProductController as SellerProductController;
 use App\Http\Controllers\Seller\ReportController as SellerReportController;
@@ -15,8 +18,18 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\SellerController;
 use App\Http\Controllers\Admin\ReportController as AdminReportController;
 
-// Public routes
-Route::get("/", [HomeController::class, "index"])->name("home");
+// Public routes - Home redirects to catalog
+Route::get("/", function () {
+    return redirect()->route("catalog.index");
+})->name("home");
+
+// Location API routes (for dependent dropdowns)
+Route::prefix('api/location')->group(function () {
+    Route::get('/cities/{provinceId}', [LocationController::class, 'getCities']);
+    Route::get('/districts/{cityId}', [LocationController::class, 'getDistricts']);
+    Route::get('/villages/{districtId}', [LocationController::class, 'getVillages']);
+    Route::get('/seller-cities', [LocationController::class, 'getCitiesByProvinceName']);
+});
 
 // SRS-MartPlace-04: Katalog produk dapat dilihat oleh pengunjung umum
 Route::get("/catalog", [CatalogController::class, "index"])->name(
@@ -53,6 +66,31 @@ Route::middleware("guest")->group(function () {
 Route::post("/logout", [LoginController::class, "logout"])
     ->name("logout")
     ->middleware("auth");
+
+// Email Verification routes
+Route::middleware('auth')->group(function () {
+    Route::get('/email/verify', [EmailVerificationController::class, 'notice'])
+        ->name('verification.notice');
+    Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+        ->middleware('signed')
+        ->name('verification.verify');
+    Route::post('/email/verification-notification', [EmailVerificationController::class, 'resend'])
+        ->middleware('throttle:6,1')
+        ->name('verification.send');
+});
+
+// Complete Profile routes (Step 2 - after email verification)
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/complete-profile', [CompleteProfileController::class, 'show'])
+        ->name('complete-profile.show');
+    Route::post('/complete-profile', [CompleteProfileController::class, 'store'])
+        ->name('complete-profile.store');
+});
+
+// Seller Pending Approval page
+Route::get('/seller/pending', function () {
+    return view('seller.pending');
+})->middleware(['auth', 'verified'])->name('seller.pending');
 
 // Seller reactivation routes (for deactivated sellers)
 Route::prefix("seller")

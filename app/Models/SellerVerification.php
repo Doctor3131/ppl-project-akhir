@@ -24,6 +24,7 @@ class SellerVerification extends Model
         "rt",
         "rw",
         "kelurahan",
+        "kecamatan",
         "kota_kabupaten",
         "province",
         "pic_photo_path",
@@ -63,11 +64,12 @@ class SellerVerification extends Model
     public function getFullAddressAttribute(): string
     {
         return sprintf(
-            "%s, RT %s/RW %s, %s, %s, %s",
+            "%s, RT %s/RW %s, %s, %s, %s, %s",
             $this->street_address,
             $this->rt,
             $this->rw,
             $this->kelurahan,
+            $this->kecamatan,
             $this->kota_kabupaten,
             $this->province,
         );

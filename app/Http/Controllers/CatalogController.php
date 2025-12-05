@@ -16,9 +16,9 @@ class CatalogController extends Controller
     {
         $query = Product::with(["user.seller", "category", "ratings"]);
 
-        // Filter hanya dari seller yang sudah diapprove
-        $query->whereHas("user", function ($q) {
-            $q->where("status", "approved")->where("role", "seller");
+        // Filter hanya dari seller yang sudah diapprove (check seller table status)
+        $query->whereHas("user.seller", function ($q) {
+            $q->where("status", "approved");
         });
 
         // Search by product name

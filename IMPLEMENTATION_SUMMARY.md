@@ -192,12 +192,23 @@ resources/views/
 
 ### **Public Routes**
 ```
-GET  /                      → Home (Product Catalog)
-GET  /products/{id}         → Product Detail
+GET  /                      → Redirect to /catalog
+GET  /catalog               → Product Catalog with filters
+GET  /catalog/{product}     → Product Detail
 GET  /login                 → Login Page
 POST /login                 → Process Login
-GET  /register              → Register Page
+GET  /register              → Register Page (Step 1)
 POST /register              → Process Registration
+GET  /complete-profile      → Complete Profile (Step 2)
+POST /complete-profile      → Save Profile Data
+```
+
+### **API Routes** (Location)
+```
+GET  /api/location/cities/{provinceId}           → Cities by Province ID
+GET  /api/location/districts/{cityId}            → Districts by City ID
+GET  /api/location/villages/{districtId}         → Villages by District ID
+GET  /api/location/seller-cities?province=NAME   → Cities from Approved Sellers
 ```
 
 ### **Seller Routes** (Requires: auth + seller + approved)
@@ -277,10 +288,20 @@ POST   /admin/sellers/{id}/reject    → Reject Seller
 
 ## 🔄 User Flows
 
-### **1. Seller Registration Flow**
+### **1. Seller Registration Flow (2-Step)**
 ```
-Register → Pending Status → Cannot Login → Admin Approves → Can Login → Manage Products
+Step 1 (Register) → Email Verification → Step 2 (Complete Profile) → 
+Pending Status → Admin Approves → Can Login → Manage Products
 ```
+
+**Step 1 - Basic Registration:**
+- Name, Email, Password
+
+**Step 2 - Complete Profile:**
+- Shop info (name, description)
+- PIC info (name, phone, email, KTP number)
+- Address (province → city → district → village → RT/RW → street)
+- Upload: Face photo, KTP scan
 
 ### **2. Product Creation Flow**
 ```

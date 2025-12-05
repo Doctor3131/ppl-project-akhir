@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -10,7 +10,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, TwoFactorAuthenticatable;
@@ -23,9 +23,12 @@ class User extends Authenticatable
     protected $fillable = [
         "name",
         "email",
+        "phone",
+        "shop_name",
         "password",
         "role",
         "status",
+        "profile_completed",
         "is_active",
         "last_login_at",
         "deactivated_at",
@@ -56,10 +59,19 @@ class User extends Authenticatable
             "email_verified_at" => "datetime",
             "password" => "hashed",
             "is_active" => "boolean",
+            "profile_completed" => "boolean",
             "last_login_at" => "datetime",
             "deactivated_at" => "datetime",
             "reactivation_requested_at" => "datetime",
         ];
+    }
+
+    /**
+     * Check if user has completed their profile
+     */
+    public function hasCompletedProfile(): bool
+    {
+        return $this->profile_completed === true;
     }
 
     /**

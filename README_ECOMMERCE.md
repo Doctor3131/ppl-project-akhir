@@ -184,12 +184,21 @@ Aplikasi akan berjalan di: `http://localhost:8000`
 ## Routes
 
 ### Public Routes
-- `GET /` - Halaman katalog produk (Home)
-- `GET /products/{id}` - Detail produk
+- `GET /` - Redirect ke katalog (`/catalog`)
+- `GET /catalog` - Halaman katalog produk dengan filter dan search
+- `GET /catalog/{product}` - Detail produk
 - `GET /login` - Halaman login
 - `POST /login` - Proses login
-- `GET /register` - Halaman register seller
+- `GET /register` - Halaman register seller (Step 1)
 - `POST /register` - Proses register seller
+- `GET /complete-profile` - Lengkapi profil seller (Step 2)
+- `POST /complete-profile` - Simpan profil seller
+
+### API Routes (Location)
+- `GET /api/location/cities/{provinceId}` - Get cities by province ID
+- `GET /api/location/districts/{cityId}` - Get districts by city ID
+- `GET /api/location/villages/{districtId}` - Get villages by district ID
+- `GET /api/location/seller-cities?province=NAME` - Get cities from approved sellers
 
 ### Seller Routes (Middleware: auth, seller)
 - `GET /seller/dashboard` - Dashboard seller
@@ -222,10 +231,16 @@ Memastikan user yang mengakses adalah seller yang sudah di-approve dan sudah log
 
 ## Flow Aplikasi
 
-### 1. Register Seller
-1. Seller mengisi form registrasi
-2. Status seller: `pending`
-3. Seller tidak bisa login sampai di-approve
+### 1. Register Seller (2-Step Process)
+1. **Step 1**: Seller mengisi form registrasi dasar (nama, email, password)
+2. Seller menerima email verifikasi
+3. **Step 2**: Setelah verifikasi email, seller melengkapi profil:
+   - Data toko (nama toko, deskripsi)
+   - Data PIC (nama, telepon, email, no KTP)
+   - Alamat lengkap (provinsi → kota → kecamatan → kelurahan → RT/RW → alamat)
+   - Upload foto diri dan scan KTP
+4. Status seller: `pending`
+5. Seller tidak bisa login sampai di-approve admin
 
 ### 2. Admin Approve Seller
 1. Admin login ke dashboard
