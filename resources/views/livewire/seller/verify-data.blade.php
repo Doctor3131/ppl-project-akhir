@@ -64,7 +64,7 @@ new class extends Component {
             <div class="flex items-center gap-3">
                 <x-app-logo-icon class="size-10 fill-current text-black dark:text-white" />
                 <flux:heading size="2xl" class="font-bold tracking-tight">
-                    CAMPUSMARKET
+                    CHROMARKET
                 </flux:heading>
             </div>
         </div>

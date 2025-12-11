@@ -13,7 +13,7 @@
                 <span class="text-gray-500">Produk & Rating</span>
             </nav>
             <h1 class="text-3xl font-bold text-gray-900">Laporan Produk & Rating</h1>
-            <p class="mt-2 text-gray-600">SRS-MartPlace-11: Daftar produk dan ratingnya diurutkan berdasarkan rating (menurun)</p>
+            <p class="mt-2 text-gray-600">Daftar produk dan ratingnya diurutkan berdasarkan rating (menurun)</p>
         </div>
         <div class="flex gap-2">
             <a href="{{ route('admin.reports.index') }}"
@@ -91,6 +91,26 @@
             </div>
         </div>
     </div>
+
+    <!-- Summary -->
+    @if ($products->count() > 0)
+        <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+            <div class="flex items-start">
+                <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>
+                    <h4 class="text-sm font-semibold text-blue-900">Ringkasan Laporan</h4>
+                    <p class="text-sm text-blue-800 mt-1">
+                        Total <strong>{{ $products->count() }}</strong> produk dengan rata-rata rating
+                        <strong>{{ number_format($products->avg('average_rating') ?? 0, 1) }}</strong> bintang
+                        dari <strong>{{ $products->sum('rating_count') }}</strong> review.
+                        <strong>{{ $products->where('average_rating', '>=', 4.5)->count() }}</strong> produk memiliki rating 4.5 atau lebih tinggi.
+                    </p>
+                </div>
+            </div>
+        </div>
+    @endif
 
     <!-- Filter Section -->
     <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
@@ -201,25 +221,5 @@
             </table>
         </div>
     </div>
-
-    <!-- Summary -->
-    @if ($products->count() > 0)
-        <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <div class="flex items-start">
-                <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <div>
-                    <h4 class="text-sm font-semibold text-blue-900">Ringkasan Laporan</h4>
-                    <p class="text-sm text-blue-800 mt-1">
-                        Total <strong>{{ $products->count() }}</strong> produk dengan rata-rata rating
-                        <strong>{{ number_format($products->avg('average_rating') ?? 0, 1) }}</strong> bintang
-                        dari <strong>{{ $products->sum('rating_count') }}</strong> review.
-                        <strong>{{ $products->where('average_rating', '>=', 4.5)->count() }}</strong> produk memiliki rating 4.5 atau lebih tinggi.
-                    </p>
-                </div>
-            </div>
-        </div>
-    @endif
 </div>
 @endsection

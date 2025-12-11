@@ -168,56 +168,69 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex items-center space-x-2">
                                         <a href="{{ route('admin.sellers.show', $seller->id) }}"
-                                            class="text-indigo-600 hover:text-indigo-900">
+                                            class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                             Detail
                                         </a>
-                                        @if($seller->status === 'pending')
-                                            <form action="{{ route('admin.sellers.approve', $seller->id) }}" method="POST" class="inline">
-                                                @csrf
-                                                <button type="submit"
-                                                    class="text-green-600 hover:text-green-900"
-                                                    onclick="return confirm('Are you sure you want to approve this seller?');">
-                                                    Approve
-                                                </button>
-                                            </form>
-                                            <form action="{{ route('admin.sellers.reject', $seller->id) }}" method="POST" class="inline">
-                                                @csrf
-                                                <button type="submit"
-                                                    class="text-red-600 hover:text-red-900"
-                                                    onclick="return confirm('Are you sure you want to reject this seller?');">
-                                                    Reject
-                                                </button>
-                                            </form>
-                                        @elseif($seller->status === 'rejected')
-                                            <form action="{{ route('admin.sellers.approve', $seller->id) }}" method="POST" class="inline">
-                                                @csrf
-                                                <button type="submit"
-                                                    class="text-green-600 hover:text-green-900"
-                                                    onclick="return confirm('Are you sure you want to approve this seller?');">
-                                                    Approve
-                                                </button>
-                                            </form>
-                                        @elseif($seller->status === 'approved')
-                                            @if($seller->is_active)
-                                                <form action="{{ route('admin.sellers.deactivate', $seller->id) }}" method="POST" class="inline">
-                                                    @csrf
-                                                    <button type="submit"
-                                                        class="text-red-600 hover:text-red-900"
-                                                        onclick="return confirm('Are you sure you want to deactivate this seller?');">
-                                                        Nonaktifkan
-                                                    </button>
-                                                </form>
-                                            @else
-                                                <form action="{{ route('admin.sellers.activate', $seller->id) }}" method="POST" class="inline">
-                                                    @csrf
-                                                    <button type="submit"
-                                                        class="text-green-600 hover:text-green-900"
-                                                        onclick="return confirm('Are you sure you want to activate this seller?');">
-                                                        Aktifkan
-                                                    </button>
-                                                </form>
-                                            @endif
-                                        @endif
+                                        
+                                        <div class="relative" x-data="{ open: false }">
+                                            <button @click="open = !open" @click.away="open = false" type="button"
+                                                class="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                                Actions
+                                                <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                                </svg>
+                                            </button>
+
+                                            <div x-show="open" 
+                                                 x-transition:enter="transition ease-out duration-100"
+                                                 x-transition:enter-start="transform opacity-0 scale-95"
+                                                 x-transition:enter-end="transform opacity-100 scale-100"
+                                                 x-transition:leave="transition ease-in duration-75"
+                                                 x-transition:leave-start="transform opacity-100 scale-100"
+                                                 x-transition:leave-end="transform opacity-0 scale-95"
+                                                 class="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50" 
+                                                 style="display: none;">
+                                                <div class="py-1">
+                                                    @if($seller->status === 'pending')
+                                                        <form action="{{ route('admin.sellers.approve', $seller->id) }}" method="POST">
+                                                            @csrf
+                                                            <button type="submit" class="w-full text-left px-4 py-2 text-sm text-green-700 hover:bg-green-50" onclick="return confirm('Are you sure you want to approve this seller?');">
+                                                                Approve
+                                                            </button>
+                                                        </form>
+                                                        <form action="{{ route('admin.sellers.reject', $seller->id) }}" method="POST">
+                                                            @csrf
+                                                            <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-50" onclick="return confirm('Are you sure you want to reject this seller?');">
+                                                                Reject
+                                                            </button>
+                                                        </form>
+                                                    @elseif($seller->status === 'rejected')
+                                                        <form action="{{ route('admin.sellers.approve', $seller->id) }}" method="POST">
+                                                            @csrf
+                                                            <button type="submit" class="w-full text-left px-4 py-2 text-sm text-green-700 hover:bg-green-50" onclick="return confirm('Are you sure you want to approve this seller?');">
+                                                                Approve
+                                                            </button>
+                                                        </form>
+                                                    @elseif($seller->status === 'approved')
+                                                        @if($seller->is_active)
+                                                            <form action="{{ route('admin.sellers.deactivate', $seller->id) }}" method="POST">
+                                                                @csrf
+                                                                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-50" onclick="return confirm('Are you sure you want to deactivate this seller?');">
+                                                                    Nonaktifkan
+                                                                </button>
+                                                            </form>
+                                                        @else
+                                                            <form action="{{ route('admin.sellers.activate', $seller->id) }}" method="POST">
+                                                                @csrf
+                                                                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-green-700 hover:bg-green-50" onclick="return confirm('Are you sure you want to activate this seller?');">
+                                                                    Aktifkan
+                                                                </button>
+                                                            </form>
+                                                        @endif
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>

@@ -23,7 +23,6 @@
                     </div>
                     <div>
                         <h3 class="text-lg font-semibold text-white">Laporan Stock</h3>
-                        <p class="text-blue-100 text-sm">SRS-12</p>
                     </div>
                 </div>
             </div>
@@ -59,7 +58,6 @@
                     </div>
                     <div>
                         <h3 class="text-lg font-semibold text-white">Laporan Rating</h3>
-                        <p class="text-yellow-100 text-sm">SRS-13</p>
                     </div>
                 </div>
             </div>
@@ -95,7 +93,6 @@
                     </div>
                     <div>
                         <h3 class="text-lg font-semibold text-white">Produk Segera Dipesan</h3>
-                        <p class="text-red-100 text-sm">SRS-14</p>
                     </div>
                 </div>
             </div>
@@ -132,7 +129,7 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                Export PDF: Laporan Stock (SRS-12)
+                Export PDF: Laporan Stock
             </a>
             
             <a href="{{ route('seller.reports.rating.export') }}"
@@ -140,7 +137,7 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                Export PDF: Laporan Rating (SRS-13)
+                Export PDF: Laporan Rating
             </a>
             
             <a href="{{ route('seller.reports.low-stock.export') }}"
@@ -148,25 +145,8 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                Export PDF: Produk Segera Dipesan (SRS-14)
+                Export PDF: Produk Segera Dipesan
             </a>
-        </div>
-    </div>
-
-    <!-- Info Box -->
-    <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <div class="flex items-start">
-            <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <div>
-                <h4 class="text-sm font-semibold text-blue-900">Informasi Laporan</h4>
-                <ul class="text-sm text-blue-800 mt-1 list-disc list-inside space-y-1">
-                    <li><strong>SRS-12:</strong> Laporan daftar produk berdasarkan stock - diurutkan dari stock terbanyak</li>
-                    <li><strong>SRS-13:</strong> Laporan daftar produk berdasarkan rating - diurutkan dari rating tertinggi</li>
-                    <li><strong>SRS-14:</strong> Laporan produk segera dipesan (stock &lt; 2) - diurutkan berdasarkan kategori dan nama produk</li>
-                </ul>
-            </div>
         </div>
     </div>
 </div>

@@ -13,7 +13,7 @@
                     <!-- Header -->
                     <tr>
                         <td style="background: linear-gradient(135deg, #4F46E5 0%, #6366F1 100%); padding: 30px; text-align: center;">
-                            <h1 style="color: #ffffff; margin: 0; font-size: 24px;">CAMPUSMARKET</h1>
+                            <h1 style="color: #ffffff; margin: 0; font-size: 24px;">CHROMARKET</h1>
                         </td>
                     </tr>
                     
@@ -82,7 +82,7 @@
                     <tr>
                         <td style="background-color: #F3F4F6; padding: 20px 40px; text-align: center;">
                             <p style="color: #6B7280; font-size: 12px; margin: 0;">
-                                © {{ date('Y') }} CAMPUSMARKET. All rights reserved.
+                                © {{ date('Y') }} CHROMARKET. All rights reserved.
                             </p>
                             <p style="color: #9CA3AF; font-size: 11px; margin: 10px 0 0 0;">
                                 Email ini dikirim secara otomatis oleh sistem. Mohon tidak membalas email ini.

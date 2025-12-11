@@ -124,10 +124,10 @@
 </head>
 <body>
     <div class="header">
-        @if(file_exists(public_path('images/LogoCampusMarket.png')))
-            <img src="{{ public_path('images/LogoCampusMarket.png') }}" alt="Logo" class="logo">
+        @if(file_exists(public_path('images/LogoChromarket.png')))
+            <img src="{{ public_path('images/LogoChromarket.png') }}" alt="Logo" class="logo">
         @endif
-        <div class="company-name">CAMPUSMARKET</div>
+        <div class="company-name">CHROMARKET</div>
         <div class="report-title">Laporan Produk Berdasarkan Rating (Menurun)</div>
         <div class="report-date">Tanggal dibuat: {{ date('d-m-Y') }} oleh {{ $adminName }}</div>
     </div>
@@ -191,7 +191,7 @@
     </table>
 
     <div class="footer">
-        <p>© {{ date('Y') }} CAMPUSMARKET - Laporan ini dihasilkan secara otomatis</p>
+        <p>© {{ date('Y') }} CHROMARKET - Laporan ini dihasilkan secara otomatis</p>
     </div>
 </body>
 </html>

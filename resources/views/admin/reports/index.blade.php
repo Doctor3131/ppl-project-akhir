@@ -23,7 +23,6 @@
                     </div>
                     <div>
                         <h3 class="text-lg font-semibold text-white">Laporan Akun Penjual</h3>
-                        <p class="text-indigo-100 text-sm">SRS-09</p>
                     </div>
                 </div>
             </div>
@@ -48,8 +47,8 @@
             </div>
         </div>
 
-        <!-- SRS-10: Laporan Toko per Propinsi -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
+        <!-- SRS-10: Laporan Toko per Provinsi -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200 flex flex-col">
             <div class="bg-gradient-to-r from-green-500 to-green-600 px-6 py-4">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
@@ -59,17 +58,18 @@
                         </svg>
                     </div>
                     <div>
-                        <h3 class="text-lg font-semibold text-white">Laporan Toko per Propinsi</h3>
-                        <p class="text-green-100 text-sm">SRS-10</p>
+                        <h3 class="text-lg font-semibold text-white">Laporan Toko per Provinsi</h3>
                     </div>
                 </div>
             </div>
-            <div class="p-6">
-                <p class="text-gray-600 text-sm mb-4">Daftar toko berdasarkan lokasi propinsi</p>
-                <div class="text-xs text-gray-500 mb-4 bg-gray-50 p-3 rounded-lg font-mono">
-                    No | Nama Toko | Nama PIC | Propinsi
+            <div class="p-6 flex flex-col flex-grow">
+                <div class="flex-grow">
+                    <p class="text-gray-600 text-sm mb-4">Daftar toko berdasarkan lokasi provinsi</p>
+                    <div class="text-xs text-gray-500 mb-4 bg-gray-50 p-3 rounded-lg font-mono">
+                        No | Nama Toko | Nama PIC | Provinsi
+                    </div>
                 </div>
-                <div class="flex gap-2">
+                <div class="flex gap-2 mt-auto">
                     <a href="{{ route('admin.reports.sellers-by-province') }}"
                        class="flex-1 px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition duration-200 text-center text-sm font-medium">
                         Lihat Laporan
@@ -86,7 +86,7 @@
         </div>
 
         <!-- SRS-11: Laporan Produk per Rating -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200 flex flex-col">
             <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 px-6 py-4">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
@@ -96,16 +96,17 @@
                     </div>
                     <div>
                         <h3 class="text-lg font-semibold text-white">Laporan Produk per Rating</h3>
-                        <p class="text-yellow-100 text-sm">SRS-11</p>
                     </div>
                 </div>
             </div>
-            <div class="p-6">
-                <p class="text-gray-600 text-sm mb-4">Daftar produk berdasarkan rating (menurun)</p>
-                <div class="text-xs text-gray-500 mb-4 bg-gray-50 p-3 rounded-lg font-mono">
-                    No | Produk | Kategori | Harga | Rating | Nama Toko | Propinsi
+            <div class="p-6 flex flex-col flex-grow">
+                <div class="flex-grow">
+                    <p class="text-gray-600 text-sm mb-4">Daftar produk berdasarkan rating (menurun)</p>
+                    <div class="text-xs text-gray-500 mb-4 bg-gray-50 p-3 rounded-lg font-mono">
+                        No | Produk | Kategori | Harga | Rating | Nama Toko | Provinsi
+                    </div>
                 </div>
-                <div class="flex gap-2">
+                <div class="flex gap-2 mt-auto">
                     <a href="{{ route('admin.reports.products-by-rating') }}"
                        class="flex-1 px-4 py-2 bg-yellow-100 text-yellow-700 rounded-lg hover:bg-yellow-200 transition duration-200 text-center text-sm font-medium">
                         Lihat Laporan
@@ -118,55 +119,6 @@
                         PDF
                     </a>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Quick Export Section -->
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">Export Cepat - Download Semua Laporan PDF</h2>
-        <p class="text-gray-600 text-sm mb-4">Klik tombol di bawah untuk langsung download laporan dalam format PDF</p>
-        
-        <div class="flex flex-wrap gap-3">
-            <a href="{{ route('admin.reports.seller-accounts.export') }}"
-               class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-200 text-sm font-medium">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                Export PDF: Akun Penjual (SRS-09)
-            </a>
-            
-            <a href="{{ route('admin.reports.sellers-by-province.export') }}"
-               class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-200 text-sm font-medium">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                Export PDF: Toko per Propinsi (SRS-10)
-            </a>
-            
-            <a href="{{ route('admin.reports.products-by-rating.export') }}"
-               class="inline-flex items-center gap-2 px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition duration-200 text-sm font-medium">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                Export PDF: Produk per Rating (SRS-11)
-            </a>
-        </div>
-    </div>
-
-    <!-- Info Box -->
-    <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <div class="flex items-start">
-            <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <div>
-                <h4 class="text-sm font-semibold text-blue-900">Informasi Laporan</h4>
-                <ul class="text-sm text-blue-800 mt-1 list-disc list-inside space-y-1">
-                    <li><strong>SRS-09:</strong> Laporan akun penjual berdasarkan status - diurutkan aktif dulu, lalu tidak aktif</li>
-                    <li><strong>SRS-10:</strong> Laporan toko berdasarkan lokasi propinsi - diurutkan per propinsi</li>
-                    <li><strong>SRS-11:</strong> Laporan produk berdasarkan rating - diurutkan dari rating tertinggi (propinsi = pemberi rating)</li>
-                </ul>
             </div>
         </div>
     </div>

@@ -167,8 +167,8 @@
         <!-- Help Section -->
         <div class="mt-6 text-center text-sm text-gray-600">
             <p>Butuh bantuan? Hubungi tim support kami:</p>
-            <a href="mailto:support@campusmarket.com" class="text-indigo-600 hover:text-indigo-800 font-medium">
-                support@campusmarket.com
+            <a href="mailto:support@chromarket.com" class="text-indigo-600 hover:text-indigo-800 font-medium">
+                support@chromarket.com
             </a>
         </div>
     </div>
