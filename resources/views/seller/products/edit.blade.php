@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Product')
+@section('title', 'Edit Produk')
 
 @section('content')
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -12,9 +12,9 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                 </svg>
             </a>
-            <h1 class="text-3xl font-bold text-gray-900">Edit Product</h1>
+            <h1 class="text-3xl font-bold text-gray-900">Edit Produk</h1>
         </div>
-        <p class="text-gray-600">Update your product details</p>
+        <p class="text-gray-600">Perbarui detail produk Anda</p>
     </div>
 
     <!-- Product Form -->
@@ -27,11 +27,11 @@
                 <!-- Product Name -->
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-                        Product Name <span class="text-red-500">*</span>
+                        Nama Produk <span class="text-red-500">*</span>
                     </label>
                     <input type="text" name="name" id="name" value="{{ old('name', $product->name) }}" required
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 @error('name') border-red-500 @enderror"
-                        placeholder="Enter product name">
+                        placeholder="Masukkan nama produk">
                     @error('name')
                         <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -40,11 +40,11 @@
                 <!-- Category -->
                 <div>
                     <label for="category_id" class="block text-sm font-medium text-gray-700 mb-2">
-                        Category <span class="text-red-500">*</span>
+                        Kategori <span class="text-red-500">*</span>
                     </label>
                     <select name="category_id" id="category_id" required
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 @error('category_id') border-red-500 @enderror">
-                        <option value="">Select a category</option>
+                        <option value="">Pilih kategori</option>
                         @foreach($categories as $category)
                             <option value="{{ $category->id }}" {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
                                 {{ $category->name }}
@@ -59,11 +59,11 @@
                 <!-- Description -->
                 <div>
                     <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
-                        Description
+                        Deskripsi
                     </label>
                     <textarea name="description" id="description" rows="4"
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 @error('description') border-red-500 @enderror"
-                        placeholder="Enter product description">{{ old('description', $product->description) }}</textarea>
+                        placeholder="Masukkan deskripsi produk">{{ old('description', $product->description) }}</textarea>
                     @error('description')
                         <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -74,7 +74,7 @@
                     <!-- Price -->
                     <div>
                         <label for="price" class="block text-sm font-medium text-gray-700 mb-2">
-                            Price (Rp) <span class="text-red-500">*</span>
+                            Harga (Rp) <span class="text-red-500">*</span>
                         </label>
                         <input type="number" name="price" id="price" value="{{ old('price', $product->price) }}" required min="0" step="0.01"
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 @error('price') border-red-500 @enderror"
@@ -87,7 +87,7 @@
                     <!-- Stock -->
                     <div>
                         <label for="stock" class="block text-sm font-medium text-gray-700 mb-2">
-                            Stock <span class="text-red-500">*</span>
+                            Stok <span class="text-red-500">*</span>
                         </label>
                         <input type="number" name="stock" id="stock" value="{{ old('stock', $product->stock) }}" required min="0"
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 @error('stock') border-red-500 @enderror"

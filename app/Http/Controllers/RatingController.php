@@ -30,6 +30,15 @@ class RatingController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
+        // Check if email already rated this product
+        $existingRating = ProductRating::where('product_id', $product->id)
+            ->where('visitor_email', $request->visitor_email)
+            ->exists();
+
+        if ($existingRating) {
+            return redirect()->back()->withErrors(['visitor_email' => 'Email ini sudah memberikan rating dan komentar untuk produk ini.'])->withInput();
+        }
+
         // Create rating
         $rating = ProductRating::create([
             "product_id" => $product->id,

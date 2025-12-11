@@ -20,7 +20,7 @@
 <body class="font-sans antialiased bg-gray-100">
     <div class="min-h-screen">
         <!-- Navigation -->
-        <nav class="bg-white shadow-lg">
+        <nav class="bg-white shadow-lg sticky top-0 z-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16">
                     <div class="flex">
@@ -40,28 +40,28 @@
                         @auth
                             @if(auth()->user()->isAdmin())
                                 <a href="{{ route('admin.dashboard') }}" class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">
-                                    Admin Dashboard
+                                    Dashboard Admin
                                 </a>
                             @elseif(auth()->user()->isSeller())
                                 <a href="{{ route('seller.dashboard') }}" class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">
-                                    Seller Dashboard
+                                    Dashboard Penjual
                                 </a>
                             @endif
                             <form method="POST" action="{{ route('logout') }}" class="inline">
                                 @csrf
                                 <button type="submit" class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">
-                                    Logout
+                                    Keluar
                                 </button>
                             </form>
                         @else
                             <a href="{{ route('home') }}" class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">
-                                Home
+                                Beranda
                             </a>
                             <a href="{{ route('login') }}" class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">
-                                Login
+                                Masuk
                             </a>
                             <a href="{{ route('register') }}" class="bg-indigo-600 text-white hover:bg-indigo-700 px-4 py-2 rounded-md text-sm font-medium">
-                                Register as Seller
+                                Daftar sebagai Penjual
                             </a>
                         @endauth
                     </div>

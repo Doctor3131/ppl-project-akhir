@@ -2,150 +2,171 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Laporan Penjual per Provinsi</title>
+    <title>Laporan Penjual Per Provinsi</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        @page {
+            margin: 1cm 2cm 2cm 2cm;
         }
         body {
             font-family: 'DejaVu Sans', sans-serif;
-            font-size: 10px;
-            line-height: 1.4;
-            color: #333;
+            font-size: 10pt;
+            color: #1f2937;
+            line-height: 1.5;
         }
-        .header {
+        .header-container {
             text-align: center;
-            padding: 20px 0;
-            border-bottom: 2px solid #4F46E5;
-            margin-bottom: 20px;
+            border-bottom: 2px solid #16A34A;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
         }
-        .logo {
-            max-height: 50px;
-            margin-bottom: 10px;
+        .logo-img {
+            height: 50px;
+            width: auto;
+            vertical-align: middle;
+            margin-right: 10px;
         }
-        .company-name {
-            font-size: 24px;
+        .brand-text {
+            font-size: 24pt;
             font-weight: bold;
-            color: #4F46E5;
-            margin-bottom: 5px;
+            color: #000000;
+            vertical-align: middle;
+        }
+        .report-info {
+            text-align: center;
+            margin-bottom: 30px;
         }
         .report-title {
-            font-size: 16px;
-            color: #666;
+            font-size: 18pt;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #111827;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .shop-name {
+            font-size: 12pt;
+            margin-bottom: 4px;
+            color: #374151;
         }
         .report-date {
-            font-size: 10px;
-            color: #999;
-            margin-top: 5px;
+            font-size: 10pt;
+            color: #6B7280;
         }
-        .summary {
-            margin-bottom: 20px;
+        .summary-section {
+            margin-bottom: 30px;
+            background-color: #F0FDF4;
+            border: 1px solid #BBF7D0;
+            border-radius: 8px;
             padding: 15px;
-            background-color: #f8f9fa;
-            border-radius: 5px;
         }
         .summary-title {
-            font-size: 12px;
+            font-size: 12pt;
             font-weight: bold;
+            color: #166534;
             margin-bottom: 10px;
-            color: #4F46E5;
+            border-bottom: 1px solid #BBF7D0;
+            padding-bottom: 5px;
         }
-        .province-stat {
-            display: inline-block;
-            margin: 3px 5px;
-            padding: 5px 10px;
-            background-color: #EEF2FF;
-            border-radius: 5px;
-            font-size: 9px;
-        }
-        table {
+        .summary-list {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
         }
-        th {
-            background-color: #4F46E5;
-            color: white;
-            padding: 10px 8px;
+        .summary-list td {
+            padding: 5px;
+            border-bottom: 1px dashed #BBF7D0;
+        }
+        .summary-list tr:last-child td {
+            border-bottom: none;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 9pt;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #E5E7EB;
+            padding: 12px;
             text-align: left;
-            font-size: 9px;
+        }
+        .data-table th {
+            background-color: #16A34A;
+            color: #ffffff;
+            font-weight: 600;
             text-transform: uppercase;
+            font-size: 8pt;
+            letter-spacing: 0.5px;
         }
-        td {
-            padding: 8px;
-            border-bottom: 1px solid #eee;
-            font-size: 9px;
+        .data-table tr:nth-child(even) {
+            background-color: #F9FAFB;
         }
-        tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-        .province-badge {
-            background-color: #4F46E5;
-            color: white;
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-size: 8px;
-            font-weight: bold;
-        }
+
         .footer {
             position: fixed;
-            bottom: 20px;
+            bottom: 0;
             left: 0;
             right: 0;
             text-align: center;
-            font-size: 8px;
-            color: #999;
-            border-top: 1px solid #eee;
+            font-size: 8pt;
+            color: #9CA3AF;
+            border-top: 1px solid #E5E7EB;
             padding-top: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        @if(file_exists(public_path('images/LogoChromarket.png')))
-            <img src="{{ public_path('images/LogoChromarket.png') }}" alt="Logo" class="logo">
-        @endif
-        <div class="company-name">CHROMARKET</div>
-        <div class="report-title">Laporan Daftar Penjual per Provinsi</div>
-        <div class="report-date">Tanggal dibuat: {{ date('d-m-Y') }} oleh {{ $adminName }}</div>
+    <!-- Header -->
+    <div class="header-container">
+        <img src="{{ public_path('images/LogoChromarket.png') }}" class="logo-img" alt="Chromarket Logo">
+        <span class="brand-text">Chromarket</span>
     </div>
 
-    <div class="summary">
-        <div class="summary-title">Ringkasan per Provinsi ({{ $statsByProvince->count() }} Provinsi)</div>
-        @foreach($statsByProvince as $stat)
-            <span class="province-stat">
-                {{ $stat->province }}: <strong>{{ $stat->total }}</strong> toko
-            </span>
-        @endforeach
+    <!-- Report Info -->
+    <div class="report-info">
+        <div class="report-title">Laporan Penjual Per Provinsi</div>
+        <div class="shop-name">Distribusi Lokasi Toko</div>
+        <div class="report-date">Tanggal: {{ now()->format('d F Y') }}</div>
     </div>
 
-    <table>
+    <!-- Summary Stats -->
+    <div class="summary-section">
+        <div class="summary-title">Ringkasan Per Provinsi</div>
+        <table class="summary-list">
+            @foreach($statsByProvince as $stat)
+                <tr>
+                    <td style="width: 70%">{{ $stat->province }}</td>
+                    <td style="width: 30%; text-align: right; font-weight: bold;">{{ $stat->total }} Toko</td>
+                </tr>
+            @endforeach
+        </table>
+    </div>
+
+    <!-- Data Table -->
+    <table class="data-table">
         <thead>
             <tr>
-                <th style="width: 30px;">No</th>
-                <th>Nama Toko</th>
-                <th>Nama PIC</th>
-                <th>Propinsi</th>
+                <th style="width: 5%">No</th>
+                <th style="width: 25%">Provinsi</th>
+                <th style="width: 25%">Nama Toko</th>
+                <th style="width: 25%">Nama PIC</th>
+                <th style="width: 20%">Kota</th>
             </tr>
         </thead>
         <tbody>
             @foreach($sellers as $index => $seller)
                 <tr>
                     <td>{{ $index + 1 }}</td>
+                    <td>{{ $seller->province }}</td>
                     <td>{{ $seller->shop_name }}</td>
                     <td>{{ $seller->pic_name }}</td>
-                    <td>
-                        <span class="province-badge">{{ $seller->province }}</span>
-                    </td>
+                    <td>{{ $seller->city }}</td>
                 </tr>
             @endforeach
         </tbody>
     </table>
 
     <div class="footer">
-        <p>© {{ date('Y') }} CHROMARKET - Laporan ini dihasilkan secara otomatis</p>
+        Dicetak oleh {{ $adminName ?? 'Administrator' }} pada {{ now()->format('d/m/Y H:i') }}
     </div>
 </body>
 </html>

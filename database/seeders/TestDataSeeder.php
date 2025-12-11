@@ -30,6 +30,7 @@ class TestDataSeeder extends Seeder
             "email_verified_at" => now(),
             "is_active" => true,
             "last_login_at" => now(),
+            "profile_completed" => true,
         ]);
 
         SellerVerification::create([
@@ -63,6 +64,7 @@ class TestDataSeeder extends Seeder
             "email_verified_at" => now(),
             "is_active" => true,
             "last_login_at" => now(),
+            "profile_completed" => true,
         ]);
 
         SellerVerification::create([
@@ -85,7 +87,6 @@ class TestDataSeeder extends Seeder
             "status" => "approved",
             "verified_at" => now(),
         ]);
-
         // Seller 3 - Jawa Timur (pending)
         $seller3 = User::create([
             "name" => "Mike's Books",
@@ -95,6 +96,7 @@ class TestDataSeeder extends Seeder
             "status" => "pending",
             "email_verified_at" => now(),
             "is_active" => true,
+            "profile_completed" => true,
         ]);
 
         SellerVerification::create([

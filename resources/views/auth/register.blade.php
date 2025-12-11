@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Register Seller')
+@section('title', 'Daftar Penjual')
 
 @section('content')
 <div class="max-w-lg mx-auto px-4 sm:px-6 lg:px-8 py-8">

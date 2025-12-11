@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
-@section('title', 'Manage Sellers')
+@section('title', 'Kelola Penjual')
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Page Header -->
     <div class="mb-8 flex justify-between items-center">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900">Manage Sellers</h1>
-            <p class="mt-2 text-gray-600">Review and approve seller registrations</p>
+            <h1 class="text-3xl font-bold text-gray-900">Kelola Penjual</h1>
+            <p class="mt-2 text-gray-600">Tinjau dan setujui pendaftaran penjual</p>
         </div>
         @php
             $pendingReactivationCount = \App\Models\User::where('role', 'seller')
@@ -23,7 +23,7 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
-                Reactivation Requests
+                Permintaan Aktivasi Ulang
                 <span class="bg-white text-orange-600 px-2 py-0.5 rounded-full text-sm font-bold">{{ $pendingReactivationCount }}</span>
             </a>
         @endif
@@ -33,30 +33,30 @@
     <div class="mb-6 bg-white p-4 rounded-lg shadow">
         <form method="GET" action="{{ route('admin.sellers.index') }}" class="flex flex-wrap items-end gap-4">
             <div class="flex-1 min-w-48">
-                <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Filter by Approval Status</label>
+                <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Filter berdasarkan Status Persetujuan</label>
                 <select name="status" id="status"
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
-                    <option value="">All Approval Status</option>
-                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
-                    <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Approved</option>
-                    <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                    <option value="">Semua Status Persetujuan</option>
+                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Menunggu</option>
+                    <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Disetujui</option>
+                    <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Ditolak</option>
                 </select>
             </div>
             <div class="flex-1 min-w-48">
-                <label for="is_active" class="block text-sm font-medium text-gray-700 mb-2">Filter by Active Status</label>
+                <label for="is_active" class="block text-sm font-medium text-gray-700 mb-2">Filter berdasarkan Status Aktif</label>
                 <select name="is_active" id="is_active"
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
-                    <option value="">All Active Status</option>
-                    <option value="1" {{ request('is_active') == '1' ? 'selected' : '' }}>Active</option>
-                    <option value="0" {{ request('is_active') == '0' ? 'selected' : '' }}>Inactive</option>
+                    <option value="">Semua Status Aktif</option>
+                    <option value="1" {{ request('is_active') == '1' ? 'selected' : '' }}>Aktif</option>
+                    <option value="0" {{ request('is_active') == '0' ? 'selected' : '' }}>Tidak Aktif</option>
                 </select>
             </div>
             <div class="flex gap-2">
                 <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
-                    Filter
+                    Cari
                 </button>
                 <a href="{{ route('admin.sellers.index') }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
-                    Reset
+                    Atur Ulang
                 </a>
             </div>
         </form>
@@ -73,25 +73,25 @@
                                 ID
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Seller Name
+                                Nama Penjual
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Shop Name
+                                Nama Toko
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Email
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Approval
+                                Persetujuan
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Status Aktif
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Last Login
+                                Login Terakhir
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Actions
+                                Aksi
                             </th>
                         </tr>
                     </thead>

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Login')
+@section('title', 'Masuk')
 
 @section('content')
 <div class="max-w-md mx-auto px-4 sm:px-6 lg:px-8">
@@ -8,8 +8,8 @@
         <div class="px-8 py-10">
             <!-- Header -->
             <div class="text-center mb-8">
-                <h2 class="text-3xl font-bold text-gray-900">Welcome Back</h2>
-                <p class="mt-2 text-gray-600">Sign in to your account</p>
+                <h2 class="text-3xl font-bold text-gray-900">Selamat Datang Kembali</h2>
+                <p class="mt-2 text-gray-600">Masuk ke akun Anda</p>
             </div>
 
             <!-- Login Form -->
@@ -19,7 +19,7 @@
                 <!-- Email Address -->
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                        Email Address
+                        Alamat Email
                     </label>
                     <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 @error('email') border-red-500 @enderror">
@@ -31,7 +31,7 @@
                 <!-- Password -->
                 <div>
                     <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                        Password
+                        Kata Sandi
                     </label>
                     <input id="password" type="password" name="password" required
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 @error('password') border-red-500 @enderror">
@@ -45,7 +45,7 @@
                     <input id="remember" type="checkbox" name="remember"
                         class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
                     <label for="remember" class="ml-2 block text-sm text-gray-700">
-                        Remember me
+                        Ingat saya
                     </label>
                 </div>
 
@@ -53,16 +53,16 @@
                 <div>
                     <button type="submit"
                         class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
-                        Sign In
+                        Masuk
                     </button>
                 </div>
 
                 <!-- Register Link -->
                 <div class="text-center">
                     <p class="text-sm text-gray-600">
-                        Don't have an account?
+                        Belum punya akun?
                         <a href="{{ route('register') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
-                            Register as Seller
+                            Daftar sebagai Penjual
                         </a>
                     </p>
                 </div>
@@ -71,7 +71,7 @@
     </div>
 
     <!-- Info Box -->
-    <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+    {{-- <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
         <div class="flex">
             <div class="flex-shrink-0">
                 <svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
@@ -79,7 +79,7 @@
                 </svg>
             </div>
             <div class="ml-3">
-                <h3 class="text-sm font-medium text-blue-800">Default Admin Credentials</h3>
+                <h3 class="text-sm font-medium text-blue-800">Kredensial Admin Default</h3>
                 <div class="mt-2 text-sm text-blue-700">
                     <p>Email: admin@example.com</p>
                     <p>Password: password</p>
@@ -97,13 +97,13 @@
                 </svg>
             </div>
             <div class="ml-3">
-                <h3 class="text-sm font-medium text-green-800">Default Seller Credentials</h3>
+                <h3 class="text-sm font-medium text-green-800">Kredensial Penjual Default</h3>
                 <div class="mt-2 text-sm text-green-700">
                     <p>Email: john@electronics.com</p>
                     <p>Password: password</p>
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 </div>
 @endsection

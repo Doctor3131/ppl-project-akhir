@@ -1,21 +1,21 @@
 @extends('layouts.app')
 
-@section('title', 'Manage Categories')
+@section('title', 'Kelola Kategori')
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Page Header -->
     <div class="mb-8 flex justify-between items-center">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900">Manage Categories</h1>
-            <p class="mt-2 text-gray-600">Create and manage product categories</p>
+            <h1 class="text-3xl font-bold text-gray-900">Kelola Kategori</h1>
+            <p class="mt-2 text-gray-600">Buat dan kelola kategori produk</p>
         </div>
         <a href="{{ route('admin.categories.create') }}"
             class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-200">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
             </svg>
-            Add Category
+            Tambah Kategori
         </a>
     </div>
 
@@ -30,19 +30,19 @@
                                 ID
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Category Name
+                                Nama Kategori
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Description
+                                Deskripsi
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Products
+                                Produk
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Created
+                                Dibuat
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Actions
+                                Aksi
                             </th>
                         </tr>
                     </thead>
@@ -56,11 +56,11 @@
                                     <div class="text-sm font-medium text-gray-900">{{ $category->name }}</div>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <div class="text-sm text-gray-500">{{ Str::limit($category->description, 60) ?? 'No description' }}</div>
+                                    <div class="text-sm text-gray-500">{{ Str::limit($category->description, 60) ?? 'Tidak ada deskripsi' }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                                        {{ $category->products_count }} products
+                                        {{ $category->products_count }} produk
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -70,15 +70,15 @@
                                     <div class="flex items-center space-x-3">
                                         <a href="{{ route('admin.categories.edit', $category->id) }}"
                                             class="text-indigo-600 hover:text-indigo-900">
-                                            Edit
+                                            Ubah
                                         </a>
                                         <form action="{{ route('admin.categories.destroy', $category->id) }}"
                                             method="POST"
-                                            onsubmit="return confirm('Are you sure you want to delete this category?');">
+                                            onsubmit="return confirm('Apakah Anda yakin ingin menghapus kategori ini?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="text-red-600 hover:text-red-900">
-                                                Delete
+                                                Hapus
                                             </button>
                                         </form>
                                     </div>

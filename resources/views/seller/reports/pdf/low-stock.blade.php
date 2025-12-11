@@ -4,226 +4,184 @@
     <meta charset="utf-8">
     <title>Laporan Stok Produk Perlu Dipesan</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        @page {
+            margin: 1cm 2cm 2cm 2cm;
         }
         body {
             font-family: 'DejaVu Sans', sans-serif;
-            font-size: 10px;
-            line-height: 1.4;
-            color: #333;
+            font-size: 10pt;
+            color: #1f2937;
+            line-height: 1.5;
         }
-        .header {
+        .header-container {
             text-align: center;
-            padding: 20px 0;
             border-bottom: 2px solid #DC2626;
-            margin-bottom: 20px;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
         }
-        .logo {
-            max-height: 50px;
-            margin-bottom: 10px;
+        .logo-img {
+            height: 50px;
+            width: auto;
+            vertical-align: middle;
+            margin-right: 10px;
         }
-        .company-name {
-            font-size: 24px;
+        .brand-text {
+            font-size: 24pt;
             font-weight: bold;
-            color: #4F46E5;
-            margin-bottom: 5px;
+            color: #000000;
+            vertical-align: middle;
+        }
+        .report-info {
+            text-align: center;
+            margin-bottom: 30px;
         }
         .report-title {
-            font-size: 16px;
-            color: #DC2626;
+            font-size: 18pt;
             font-weight: bold;
+            margin-bottom: 8px;
+            color: #DC2626; /* Red-600 */
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        .seller-info {
-            font-size: 11px;
-            color: #333;
-            margin-top: 5px;
+        .shop-name {
+            font-size: 12pt;
+            margin-bottom: 4px;
+            color: #374151;
         }
         .report-date {
-            font-size: 10px;
-            color: #999;
-            margin-top: 5px;
+            font-size: 10pt;
+            color: #6B7280;
         }
-        .alert-box {
-            background-color: #FEF2F2;
-            border: 1px solid #FCA5A5;
-            border-radius: 5px;
-            padding: 15px;
-            margin-bottom: 20px;
+        .summary-table {
+            width: 100%;
+            margin-bottom: 30px;
+            border-collapse: separate;
+            border-spacing: 15px 0;
+        }
+        .summary-cell {
             text-align: center;
+            padding: 15px;
+            background-color: #FEF2F2; /* Red-50 */
+            border-radius: 8px;
+            width: 100%;
+            border: 1px solid #FECACA; /* Red-200 */
         }
-        .alert-title {
-            font-size: 12px;
-            font-weight: bold;
-            color: #DC2626;
+        .summary-label {
+            font-size: 9pt;
+            color: #7F1D1D; /* Red-900 */
+            display: block;
             margin-bottom: 5px;
-        }
-        .alert-text {
-            font-size: 10px;
-            color: #991B1B;
-        }
-        .stats-container {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border-radius: 5px;
-        }
-        .stat-box {
-            text-align: center;
-            padding: 10px 20px;
-        }
-        .stat-number {
-            font-size: 20px;
-            font-weight: bold;
-            color: #4F46E5;
-        }
-        .stat-label {
-            font-size: 9px;
-            color: #666;
             text-transform: uppercase;
+            font-weight: 600;
         }
-        table {
+        .summary-value {
+            font-size: 18pt;
+            font-weight: bold;
+            color: #DC2626; /* Red-600 */
+        }
+        .data-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 9pt;
         }
-        th {
-            background-color: #DC2626;
-            color: white;
-            padding: 10px 8px;
+        .data-table th, .data-table td {
+            border: 1px solid #E5E7EB;
+            padding: 12px;
             text-align: left;
-            font-size: 9px;
+        }
+        .data-table th {
+            background-color: #DC2626; /* Red-600 */
+            color: #ffffff;
+            font-weight: 600;
             text-transform: uppercase;
+            font-size: 8pt;
+            letter-spacing: 0.5px;
         }
-        td {
-            padding: 8px;
-            border-bottom: 1px solid #eee;
-            font-size: 9px;
+        .data-table tr:nth-child(even) {
+            background-color: #F9FAFB;
         }
-        tr:nth-child(even) {
-            background-color: #FEF2F2;
-        }
-        tr:nth-child(odd) {
-            background-color: #fff;
-        }
-        .stock-out {
-            background-color: #DC2626;
-            color: white;
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-size: 8px;
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 9999px;
+            font-size: 8pt;
             font-weight: bold;
+            display: inline-block;
+            text-align: center;
+            min-width: 60px;
         }
-        .stock-low {
-            background-color: #F59E0B;
-            color: white;
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-size: 8px;
-            font-weight: bold;
-        }
-        .category-badge {
-            background-color: #DBEAFE;
-            color: #1E40AF;
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-size: 8px;
-            font-weight: bold;
-        }
+        .status-warning { background-color: #FEF3C7; color: #92400E; }
+        .status-danger { background-color: #FDE8E8; color: #9B1C1C; }
+
         .footer {
             position: fixed;
-            bottom: 20px;
+            bottom: 0;
             left: 0;
             right: 0;
             text-align: center;
-            font-size: 8px;
-            color: #999;
-            border-top: 1px solid #eee;
+            font-size: 8pt;
+            color: #9CA3AF;
+            border-top: 1px solid #E5E7EB;
             padding-top: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        @if(file_exists(public_path('images/LogoChromarket.png')))
-            <img src="{{ public_path('images/LogoChromarket.png') }}" alt="Logo" class="logo">
-        @endif
-        <div class="company-name">CHROMARKET</div>
-        <div class="report-title">⚠️ LAPORAN PRODUK PERLU DIPESAN (STOK < 2)</div>
-        <div class="seller-info">Toko: {{ $shopName }}</div>
-        <div class="report-date">Tanggal dibuat: {{ date('d-m-Y') }} oleh {{ $sellerName }}</div>
+    <!-- Header -->
+    <div class="header-container">
+        <img src="{{ public_path('images/LogoChromarket.png') }}" class="logo-img" alt="Chromarket Logo">
+        <span class="brand-text">Chromarket</span>
     </div>
 
-    @if($products->count() > 0)
-        <div class="alert-box">
-            <div class="alert-title">⚠️ PERHATIAN: {{ $products->count() }} Produk Perlu Segera Dipesan!</div>
-            <div class="alert-text">Produk dengan stok kurang dari 2 unit harus segera dipesan untuk menghindari kehabisan stok.</div>
-        </div>
-    @endif
-
-    <div class="stats-container">
-        <div class="stat-box">
-            <div class="stat-number" style="color: #DC2626;">{{ $stats['low_stock_count'] }}</div>
-            <div class="stat-label">Produk Stok Rendah</div>
-        </div>
-        <div class="stat-box">
-            <div class="stat-number" style="color: #DC2626;">{{ $stats['out_of_stock'] }}</div>
-            <div class="stat-label">Produk Habis</div>
-        </div>
-        <div class="stat-box">
-            <div class="stat-number" style="color: #F59E0B;">{{ $stats['stock_1'] }}</div>
-            <div class="stat-label">Stok = 1</div>
-        </div>
-        <div class="stat-box">
-            <div class="stat-number" style="color: #059669;">Rp {{ number_format($stats['total_value'], 0, ',', '.') }}</div>
-            <div class="stat-label">Nilai Stok Tersisa</div>
-        </div>
+    <!-- Report Info -->
+    <div class="report-info">
+        <div class="report-title">Laporan Stok Produk Perlu Dipesan</div>
+        <div class="shop-name">Toko: {{ $shopName }}</div>
+        <div class="report-date">Tanggal: {{ now()->format('d F Y') }}</div>
     </div>
 
-    @if($products->count() > 0)
-        <table>
-            <thead>
+    <!-- Summary Stats -->
+    <table class="summary-table">
+        <tr>
+            <td class="summary-cell">
+                <span class="summary-label">Total Produk Perlu Restock</span>
+                <span class="summary-value">{{ $stats['low_stock_count'] }}</span>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Data Table -->
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th style="width: 5%">No</th>
+                <th style="width: 40%">Nama Produk</th>
+                <th style="width: 25%">Kategori</th>
+                <th style="width: 15%">Stok Saat Ini</th>
+                <th style="width: 15%">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($products as $index => $product)
                 <tr>
-                    <th style="width: 30px;">No</th>
-                    <th>Produk</th>
-                    <th>Kategori</th>
-                    <th style="text-align: right;">Harga</th>
-                    <th style="text-align: center;">Stock</th>
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ $product->name }}</td>
+                    <td>{{ $product->category->name }}</td>
+                    <td>{{ $product->stock }}</td>
+                    <td>
+                        @if($product->stock == 0)
+                            <span class="status-badge status-danger">Habis</span>
+                        @else
+                            <span class="status-badge status-warning">Menipis</span>
+                        @endif
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach($products as $index => $product)
-                    <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td>{{ $product->name }}</td>
-                        <td>
-                            <span class="category-badge">{{ $product->category->name ?? '-' }}</span>
-                        </td>
-                        <td style="text-align: right;">Rp {{ number_format($product->price, 0, ',', '.') }}</td>
-                        <td style="text-align: center;">
-                            @if($product->stock == 0)
-                                <span class="stock-out">{{ $product->stock }}</span>
-                            @else
-                                <span class="stock-low">{{ $product->stock }}</span>
-                            @endif
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @else
-        <div style="text-align: center; padding: 40px; color: #059669;">
-            <p style="font-size: 14px; font-weight: bold;">✅ Semua produk memiliki stok yang cukup!</p>
-            <p style="font-size: 10px; margin-top: 10px;">Tidak ada produk yang perlu dipesan saat ini.</p>
-        </div>
-    @endif
+            @endforeach
+        </tbody>
+    </table>
 
     <div class="footer">
-        <p>© {{ date('Y') }} CHROMARKET - Laporan ini dihasilkan secara otomatis</p>
+        Dicetak oleh {{ $sellerName }} pada {{ now()->format('d/m/Y H:i') }}
     </div>
 </body>
 </html>

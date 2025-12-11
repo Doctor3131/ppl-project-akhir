@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Seller Dashboard')
+@section('title', 'Dashboard Penjual')
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Page Header -->
     <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Seller Dashboard</h1>
-        <p class="mt-2 text-gray-600">Welcome back, {{ auth()->user()->name }}!</p>
+        <h1 class="text-3xl font-bold text-gray-900">Dashboard Penjual</h1>
+        <p class="mt-2 text-gray-600">Selamat datang kembali, {{ auth()->user()->name }}!</p>
     </div>
 
     <!-- Statistics Cards -->
@@ -75,7 +75,7 @@
 
     <!-- Quick Actions -->
     <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-        <h2 class="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Aksi Cepat</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <a href="{{ route('seller.products.create') }}"
                 class="flex items-center p-4 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors duration-200">

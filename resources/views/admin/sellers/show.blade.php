@@ -23,11 +23,11 @@
         <div class="flex items-center gap-2">
             @if($seller->status === 'pending')
                 <span class="px-4 py-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                    Pending
+                    Menunggu
                 </span>
             @elseif($seller->status === 'approved')
                 <span class="px-4 py-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                    Approved
+                    Disetujui
                 </span>
                 @if($seller->is_active)
                     <span class="px-4 py-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
@@ -40,7 +40,7 @@
                 @endif
             @else
                 <span class="px-4 py-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                    Rejected
+                    Ditolak
                 </span>
             @endif
         </div>

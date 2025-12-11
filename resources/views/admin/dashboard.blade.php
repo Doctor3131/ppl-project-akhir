@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Admin Dashboard')
+@section('title', 'Dashboard Admin')
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Page Header -->
     <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-        <p class="mt-2 text-gray-600">Welcome back, {{ auth()->user()->name }}!</p>
+        <h1 class="text-3xl font-bold text-gray-900">Dashboard Admin</h1>
+        <p class="mt-2 text-gray-600">Selamat datang kembali, {{ auth()->user()->name }}!</p>
     </div>
 
     <!-- Statistics Cards -->
@@ -16,7 +16,7 @@
         <div class="bg-white rounded-lg shadow-md p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-600 mb-1">Pending Sellers</p>
+                    <p class="text-sm font-medium text-gray-600 mb-1">Penjual Menunggu</p>
                     <p class="text-3xl font-bold text-yellow-600">{{ $pendingSellers }}</p>
                 </div>
                 <div class="p-3 bg-yellow-100 rounded-full">
@@ -27,7 +27,7 @@
             </div>
             <div class="mt-4">
                 <a href="{{ route('admin.sellers.index', ['status' => 'pending']) }}" class="text-sm text-yellow-600 hover:text-yellow-700 font-medium">
-                    View pending requests →
+                    Lihat permintaan tertunda →
                 </a>
             </div>
         </div>
@@ -36,7 +36,7 @@
         <div class="bg-white rounded-lg shadow-md p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-600 mb-1">Approved Sellers</p>
+                    <p class="text-sm font-medium text-gray-600 mb-1">Penjual Disetujui</p>
                     <p class="text-3xl font-bold text-green-600">{{ $approvedSellers }}</p>
                 </div>
                 <div class="p-3 bg-green-100 rounded-full">
@@ -47,7 +47,7 @@
             </div>
             <div class="mt-4">
                 <a href="{{ route('admin.sellers.index', ['status' => 'approved']) }}" class="text-sm text-green-600 hover:text-green-700 font-medium">
-                    View all sellers →
+                    Lihat semua penjual →
                 </a>
             </div>
         </div>
@@ -56,7 +56,7 @@
         <div class="bg-white rounded-lg shadow-md p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-600 mb-1">Total Products</p>
+                    <p class="text-sm font-medium text-gray-600 mb-1">Total Produk</p>
                     <p class="text-3xl font-bold text-blue-600">{{ $totalProducts }}</p>
                 </div>
                 <div class="p-3 bg-blue-100 rounded-full">
@@ -67,7 +67,7 @@
             </div>
             <div class="mt-4">
                 <a href="{{ route('home') }}" class="text-sm text-blue-600 hover:text-blue-700 font-medium">
-                    View catalog →
+                    Lihat katalog →
                 </a>
             </div>
         </div>
@@ -76,7 +76,7 @@
         <div class="bg-white rounded-lg shadow-md p-6">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-600 mb-1">Total Categories</p>
+                    <p class="text-sm font-medium text-gray-600 mb-1">Total Kategori</p>
                     <p class="text-3xl font-bold text-purple-600">{{ $totalCategories }}</p>
                 </div>
                 <div class="p-3 bg-purple-100 rounded-full">
@@ -87,7 +87,7 @@
             </div>
             <div class="mt-4">
                 <a href="{{ route('admin.categories.index') }}" class="text-sm text-purple-600 hover:text-purple-700 font-medium">
-                    Manage categories →
+                    Kelola kategori →
                 </a>
             </div>
         </div>
@@ -110,7 +110,7 @@
             </div>
             <div class="mt-4">
                 <a href="{{ route('admin.sellers.index', ['is_active' => '1']) }}" class="text-sm text-emerald-600 hover:text-emerald-700 font-medium">
-                    View active sellers →
+                    Lihat penjual aktif →
                 </a>
             </div>
         </div>
@@ -130,7 +130,7 @@
             </div>
             <div class="mt-4">
                 <a href="{{ route('admin.sellers.index', ['is_active' => '0']) }}" class="text-sm text-gray-600 hover:text-gray-700 font-medium">
-                    View inactive sellers →
+                    Lihat penjual non-aktif →
                 </a>
             </div>
         </div>
@@ -150,7 +150,7 @@
             </div>
             <div class="mt-4">
                 <a href="{{ route('admin.sellers.reactivation-requests') }}" class="text-sm text-orange-600 hover:text-orange-700 font-medium">
-                    Review requests →
+                    Tinjau permintaan →
                 </a>
             </div>
         </div>
@@ -161,7 +161,7 @@
     <!-- Quick Actions -->
     <div class="bg-white rounded-lg shadow-md p-6 mb-8">
 
-        <h2 class="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Aksi Cepat</h2>
 
         <!-- Alert for Pending Approvals -->
         @if($pendingSellers > 0)
@@ -174,9 +174,9 @@
                     </div>
                     <div class="ml-3">
                         <p class="text-sm text-yellow-700">
-                            <span class="font-medium">{{ $pendingSellers }}</span> seller registration{{ $pendingSellers > 1 ? 's' : '' }} waiting for your approval.
+                            <span class="font-medium">{{ $pendingSellers }}</span> pendaftaran penjual menunggu persetujuan Anda.
                             <a href="{{ route('admin.sellers.index', ['status' => 'pending']) }}" class="font-semibold underline hover:text-yellow-600">
-                                Review now
+                                Tinjau sekarang
                             </a>
                         </p>
                     </div>
@@ -193,8 +193,8 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="font-semibold text-gray-900">Add Category</p>
-                    <p class="text-sm text-gray-600">Create new category</p>
+                    <p class="font-semibold text-gray-900">Tambah Kategori</p>
+                    <p class="text-sm text-gray-600">Buat kategori baru</p>
                 </div>
             </a>
 
@@ -206,8 +206,8 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="font-semibold text-gray-900">Manage Sellers</p>
-                    <p class="text-sm text-gray-600">Approve/reject sellers</p>
+                    <p class="font-semibold text-gray-900">Kelola Penjual</p>
+                    <p class="text-sm text-gray-600">Setujui/tolak penjual</p>
                 </div>
             </a>
 
@@ -220,7 +220,7 @@
                 </div>
                 <div>
                     <p class="font-semibold text-gray-900">Laporan</p>
-                    <p class="text-sm text-gray-600">Download PDF reports</p>
+                    <p class="text-sm text-gray-600">Unduh laporan PDF</p>
                 </div>
             </a>
 
@@ -232,8 +232,8 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="font-semibold text-gray-900">View Categories</p>
-                    <p class="text-sm text-gray-600">Browse all categories</p>
+                    <p class="font-semibold text-gray-900">Lihat Kategori</p>
+                    <p class="text-sm text-gray-600">Lihat semua kategori</p>
                 </div>
             </a>
         </div>
@@ -453,7 +453,7 @@
     new Chart(sellerApprovalCtx, {
         type: 'pie',
         data: {
-            labels: ['Disetujui', 'Pending', 'Ditolak'],
+            labels: ['Disetujui', 'Menunggu', 'Ditolak'],
             datasets: [{
                 data: [
                     {{ $sellerApprovalData['approved'] }},
@@ -601,7 +601,7 @@
                     fill: false
                 },
                 {
-                    label: 'Seller Baru',
+                    label: 'Penjual Baru',
                     data: monthlyData.map(d => d.sellers),
                     borderColor: colors.warningBorder,
                     backgroundColor: colors.warning,

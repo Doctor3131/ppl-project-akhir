@@ -4,159 +4,163 @@
     <meta charset="utf-8">
     <title>Laporan Produk Berdasarkan Rating</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        @page {
+            margin: 1cm 2cm 2cm 2cm;
         }
         body {
             font-family: 'DejaVu Sans', sans-serif;
-            font-size: 10px;
-            line-height: 1.4;
-            color: #333;
+            font-size: 10pt;
+            color: #1f2937;
+            line-height: 1.5;
         }
-        .header {
+        .header-container {
             text-align: center;
-            padding: 20px 0;
-            border-bottom: 2px solid #4F46E5;
-            margin-bottom: 20px;
+            border-bottom: 2px solid #CA8A04;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
         }
-        .logo {
-            max-height: 50px;
-            margin-bottom: 10px;
+        .logo-img {
+            height: 50px;
+            width: auto;
+            vertical-align: middle;
+            margin-right: 10px;
         }
-        .company-name {
-            font-size: 24px;
+        .brand-text {
+            font-size: 24pt;
             font-weight: bold;
-            color: #4F46E5;
-            margin-bottom: 5px;
+            color: #000000;
+            vertical-align: middle;
+        }
+        .report-info {
+            text-align: center;
+            margin-bottom: 30px;
         }
         .report-title {
-            font-size: 16px;
-            color: #666;
+            font-size: 18pt;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #111827;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .shop-name {
+            font-size: 12pt;
+            margin-bottom: 4px;
+            color: #374151;
         }
         .report-date {
-            font-size: 10px;
-            color: #999;
-            margin-top: 5px;
+            font-size: 10pt;
+            color: #6B7280;
         }
-        .stats-container {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border-radius: 5px;
+        .summary-table {
+            width: 100%;
+            margin-bottom: 30px;
+            border-collapse: separate;
+            border-spacing: 15px 0;
         }
-        .stat-box {
+        .summary-cell {
             text-align: center;
-            padding: 10px 20px;
+            padding: 15px;
+            background-color: #FEFCE8;
+            border-radius: 8px;
+            width: 50%;
+            border: 1px solid #FEF08A;
         }
-        .stat-number {
-            font-size: 20px;
-            font-weight: bold;
-            color: #4F46E5;
-        }
-        .stat-label {
-            font-size: 9px;
-            color: #666;
+        .summary-label {
+            font-size: 9pt;
+            color: #854D0E;
+            display: block;
+            margin-bottom: 5px;
             text-transform: uppercase;
+            font-weight: 600;
         }
-        table {
+        .summary-value {
+            font-size: 18pt;
+            font-weight: bold;
+            color: #CA8A04;
+        }
+        .data-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 9pt;
         }
-        th {
-            background-color: #4F46E5;
-            color: white;
-            padding: 10px 8px;
+        .data-table th, .data-table td {
+            border: 1px solid #E5E7EB;
+            padding: 12px;
             text-align: left;
-            font-size: 9px;
+        }
+        .data-table th {
+            background-color: #CA8A04;
+            color: #ffffff;
+            font-weight: 600;
             text-transform: uppercase;
+            font-size: 8pt;
+            letter-spacing: 0.5px;
         }
-        td {
-            padding: 8px;
-            border-bottom: 1px solid #eee;
-            font-size: 9px;
+        .data-table tr:nth-child(even) {
+            background-color: #F9FAFB;
         }
-        tr:nth-child(even) {
-            background-color: #f8f9fa;
+        .rating-star {
+            color: #CA8A04;
+            font-size: 12pt;
+            margin-right: 4px;
         }
-        .rating-stars {
-            color: #F59E0B;
-            font-weight: bold;
-        }
-        .category-badge {
-            background-color: #DBEAFE;
-            color: #1E40AF;
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-size: 8px;
-            font-weight: bold;
-        }
-        .province-badge {
-            background-color: #EEF2FF;
-            color: #4F46E5;
-            padding: 2px 6px;
-            border-radius: 8px;
-            font-size: 7px;
-            display: inline-block;
-            margin: 1px;
-        }
-        .province-more {
-            color: #6B7280;
-            font-size: 7px;
-            font-style: italic;
-        }
+
         .footer {
             position: fixed;
-            bottom: 20px;
+            bottom: 0;
             left: 0;
             right: 0;
             text-align: center;
-            font-size: 8px;
-            color: #999;
-            border-top: 1px solid #eee;
+            font-size: 8pt;
+            color: #9CA3AF;
+            border-top: 1px solid #E5E7EB;
             padding-top: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        @if(file_exists(public_path('images/LogoChromarket.png')))
-            <img src="{{ public_path('images/LogoChromarket.png') }}" alt="Logo" class="logo">
-        @endif
-        <div class="company-name">CHROMARKET</div>
-        <div class="report-title">Laporan Produk Berdasarkan Rating (Menurun)</div>
-        <div class="report-date">Tanggal dibuat: {{ date('d-m-Y') }} oleh {{ $adminName }}</div>
+    <!-- Header -->
+    <div class="header-container">
+        <img src="{{ public_path('images/LogoChromarket.png') }}" class="logo-img" alt="Chromarket Logo">
+        <span class="brand-text">Chromarket</span>
     </div>
 
-    <div class="stats-container">
-        <div class="stat-box">
-            <div class="stat-number">{{ $products->count() }}</div>
-            <div class="stat-label">Total Produk</div>
-        </div>
-        <div class="stat-box">
-            <div class="stat-number" style="color: #F59E0B;">{{ $products->where('rating_count', '>', 0)->count() }}</div>
-            <div class="stat-label">Produk dgn Rating</div>
-        </div>
-        <div class="stat-box">
-            <div class="stat-number" style="color: #059669;">{{ $products->sum('rating_count') }}</div>
-            <div class="stat-label">Total Rating</div>
-        </div>
+    <!-- Report Info -->
+    <div class="report-info">
+        <div class="report-title">Laporan Produk Berdasarkan Rating</div>
+        <div class="shop-name">Semua Toko</div>
+        <div class="report-date">Tanggal: {{ now()->format('d F Y') }}</div>
     </div>
 
-    <table>
+    <!-- Summary Stats -->
+    <table class="summary-table">
+        <tr>
+            <td class="summary-cell">
+                <span class="summary-label">Rata-rata Rating Global</span>
+                <span class="summary-value">
+                    <span class="rating-star">★</span> {{ number_format($products->avg('average_rating'), 1) }}
+                </span>
+            </td>
+            <td class="summary-cell">
+                <span class="summary-label">Total Ulasan Global</span>
+                <span class="summary-value">{{ $products->sum('rating_count') }}</span>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Data Table -->
+    <table class="data-table">
         <thead>
             <tr>
-                <th style="width: 30px;">No</th>
-                <th>Produk</th>
-                <th>Kategori</th>
-                <th style="text-align: right;">Harga</th>
-                <th style="text-align: center;">Rating</th>
-                <th>Nama Toko</th>
-                <th>Propinsi (Pemberi Rating)</th>
+                <th style="width: 5%">No</th>
+                <th style="width: 30%">Nama Produk</th>
+                <th style="width: 20%">Toko</th>
+                <th style="width: 15%">Kategori</th>
+                <th style="width: 15%">Lokasi Utama</th>
+                <th style="width: 10%">Rating</th>
+                <th style="width: 5%">Ulasan</th>
             </tr>
         </thead>
         <tbody>
@@ -164,34 +168,20 @@
                 <tr>
                     <td>{{ $index + 1 }}</td>
                     <td>{{ $product->name }}</td>
+                    <td>{{ $product->user->seller->shop_name ?? 'N/A' }}</td>
+                    <td>{{ $product->category->name }}</td>
+                    <td>{{ $product->primary_rater_province }}</td>
                     <td>
-                        <span class="category-badge">{{ $product->category->name ?? '-' }}</span>
+                        <span class="rating-star">★</span> {{ number_format($product->average_rating, 1) }}
                     </td>
-                    <td style="text-align: right;">Rp {{ number_format($product->price, 0, ',', '.') }}</td>
-                    <td style="text-align: center;">
-                        <span class="rating-stars">{{ number_format($product->average_rating, 1) }} ★</span>
-                        <br><small>({{ $product->rating_count }})</small>
-                    </td>
-                    <td>{{ $product->user->seller->shop_name ?? '-' }}</td>
-                    <td>
-                        @if($product->rater_provinces && $product->rater_provinces->count() > 0)
-                            @foreach($product->rater_provinces->take(2) as $prov)
-                                <span class="province-badge">{{ $prov->province }} ({{ $prov->count }})</span>
-                            @endforeach
-                            @if($product->rater_provinces->count() > 2)
-                                <span class="province-more">+{{ $product->rater_provinces->count() - 2 }} lainnya</span>
-                            @endif
-                        @else
-                            <span style="color: #999;">-</span>
-                        @endif
-                    </td>
+                    <td>{{ $product->rating_count }}</td>
                 </tr>
             @endforeach
         </tbody>
     </table>
 
     <div class="footer">
-        <p>© {{ date('Y') }} CHROMARKET - Laporan ini dihasilkan secara otomatis</p>
+        Dicetak oleh {{ $adminName ?? 'Administrator' }} pada {{ now()->format('d/m/Y H:i') }}
     </div>
 </body>
 </html>
